@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
 /// <summary>
 /// 이동, 점프, 방향 전환 등 플레이어의 움직임을 제어하는 클래스
 /// </summary>
-
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private PlayerPhysics physics;
@@ -40,12 +40,16 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump")]
     [SerializeField] private float jumpPower = 12f;
     [SerializeField, Range(0f, 1f)] private float jumpCutRate = 0.5f;
+
+    public event Action OnJumped;
+
     public void Jump()
     {
         if (!physics.IsGrounded)
             return;
 
         physics.SetVelocityY(jumpPower);
+        OnJumped?.Invoke();
     }
 
     public void CutJump()
@@ -55,12 +59,16 @@ public class PlayerMovement : MonoBehaviour
 
         physics.SetVelocityY(physics.CurrentVelocityY * jumpCutRate);
     }
+
     #endregion
 
     #region Facing
+
     [Header("Facing")]
     [SerializeField] private Transform playerRoot;
+
     public bool IsFacingRight { get; private set; } = true;
+
     private void UpdateFacing(float inputX)
     {
         if (inputX > 0f)
@@ -93,5 +101,6 @@ public class PlayerMovement : MonoBehaviour
         scale.x = Mathf.Abs(scale.x) * sign;
         playerRoot.localScale = scale;
     }
+
     #endregion
 }

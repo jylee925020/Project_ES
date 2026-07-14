@@ -7,6 +7,7 @@ public class PlayerPhysics : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
 
+    public float CurrentVelocityX => rb.linearVelocity.x;
     public float CurrentVelocityY => rb.linearVelocity.y;
     private void Update()
     {
