@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerMovement movement;
+    [SerializeField] private PlayerAttack attack;
 
     private void Update()
     {
@@ -19,6 +20,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space))
         {
             movement.CutJump();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            attack.Attack();
         }
     }
 }

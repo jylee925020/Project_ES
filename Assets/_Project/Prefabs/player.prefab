@@ -201,6 +201,7 @@ GameObject:
   - component: {fileID: 7639283283025640474}
   - component: {fileID: 4551536752873293882}
   - component: {fileID: 3654730522666645952}
+  - component: {fileID: 5957106499548134616}
   - component: {fileID: 150835140093219318}
   - component: {fileID: 6504587801508926852}
   m_Layer: 0
@@ -241,6 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 7639283283025640474}
+  attack: {fileID: 5957106499548134616}
 --- !u!114 &7639283283025640474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,6 +295,19 @@ MonoBehaviour:
   animator: {fileID: 150835140093219318}
   movement: {fileID: 7639283283025640474}
   physics: {fileID: 4551536752873293882}
+  attack: {fileID: 5957106499548134616}
+--- !u!114 &5957106499548134616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438221091232981000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 192ee40dba39c7545b30f688874657f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &150835140093219318
 Animator:
   serializedVersion: 7

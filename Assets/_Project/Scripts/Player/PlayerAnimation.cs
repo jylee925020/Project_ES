@@ -9,25 +9,32 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private PlayerPhysics physics;
+    [SerializeField] private PlayerAttack attack;
 
     private static readonly int JumpHash = Animator.StringToHash("Jump");
     private static readonly int IsGroundedHash = Animator.StringToHash("IsGrounded");
     private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
+    private static readonly int AttackHash = Animator.StringToHash("Attack");
 
+
+    #region life cycle
     private void OnEnable()
     {
         movement.OnJumped += PlayJump;
+        attack.OnAttacked += PlayAttack;
     }
 
     private void OnDisable()
     {
         movement.OnJumped -= PlayJump;
+        attack.OnAttacked -= PlayAttack;
     }
 
     private void Update()
     {
         UpdateState();
     }
+    #endregion
 
     private void UpdateState()
     {
@@ -38,5 +45,16 @@ public class PlayerAnimation : MonoBehaviour
     private void PlayJump()
     {
         animator.SetTrigger(JumpHash);
+    }
+
+
+    // 무기로부터 공격 모션 이름을 받아서 애니메이션을 재생함.
+    private void PlayAttack(string motionName)
+    {
+        string stateName = physics.IsGrounded
+            ? $"Ground_{motionName}"
+            : $"Air_{motionName}";
+
+        animator.Play(stateName);
     }
 }
