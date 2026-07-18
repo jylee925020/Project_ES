@@ -16,11 +16,15 @@ public class PlayerMovement : MonoBehaviour
 
     private float moveInputX;
 
-    public void Move(float inputX)
+    // canChangeFacing을 false로 설정하면 방향 전환 없이 이동만 함
+    public void Move(float inputX, bool canChangeFacing = true)
     {
         moveInputX = inputX;
 
-        UpdateFacing(moveInputX);
+        if (canChangeFacing)
+        {
+            UpdateFacing(moveInputX);
+        }
 
         if (Mathf.Abs(moveInputX) > 0.01f)
         {
@@ -31,6 +35,13 @@ public class PlayerMovement : MonoBehaviour
         {
             physics.MoveVelocityX(0f, deceleration);
         }
+    }
+
+    // 즉시 좌우 속도를 0으로 만들어 이동을 멈춤
+    public void StopImmediately()
+    {
+        moveInputX = 0f;
+        physics.SetVelocityX(0f);
     }
 
     #endregion

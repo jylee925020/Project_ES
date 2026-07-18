@@ -1,16 +1,141 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 플레이어의 공격을 제어하는 클래스
+/// 플레이어의 공격 실행과 공격 타이밍을 관리하는 클래스
 /// </summary>
 public class PlayerAttack : MonoBehaviour
 {
+    [SerializeField] private PlayerPhysics physics;
+
+    [Header("Temporary Attack")]        // 추후 무기가 보유하게 할 데이터들. 임시로 여기서 지정함.
+    [SerializeField] private GameObject attackPrefab;       // 공격 프리팹(히트박스, 이펙트)
+    [SerializeField] private float startupTime = 0.12f;     // 선딜
+    [SerializeField] private float recoveryTime = 0.28f;    // 후딜
+
     public event Action<string> OnAttacked;
 
+    private bool isAttacking;
+    public bool IsAttacking => isAttacking;
+
+    // 착지 시 후딜 캔슬을 위해 공격 코루틴을 저장
+    private Coroutine attackRoutine;     // 현재 공격 코루틴
+    private bool isInRecovery;           // 후딜 중인지
+    private bool startedInAir;           // 공격 시작 시 공중이었는지
+
+    #region lifecycle
+    private void OnEnable()
+    {
+        physics.OnLanded += HandleLanded;
+    }
+
+    private void OnDisable()
+    {
+        physics.OnLanded -= HandleLanded;
+    }
+    #endregion
+
+    // 공격 실행
     public void Attack()
     {
-        OnAttacked?.Invoke("Swing_1");  // 임시로 직접 입력
-        // 추후 현재 무기로부터 모션 이름을 가져오도록 할 예정
+        if (isAttacking)
+            return;
+
+        startedInAir = !physics.IsGrounded;
+        attackRoutine = StartCoroutine(AttackRoutine());
+    }
+
+    // 공격 코루틴
+    private IEnumerator AttackRoutine()
+    {
+        isAttacking = true;
+        isInRecovery = false;
+
+        OnAttacked?.Invoke("Swing_1");  // 공격 이벤트 호출 (애니메이션 , 사운드 등 에서 사용)
+        // 추후 무기별로 다른 이벤트를 호출하도록 수정할 예정
+
+        yield return new WaitForSeconds(startupTime); // 선딜 대기
+
+        SpawnAttack();      // 공격 프리팹 생성
+
+        isInRecovery = true;  // 후딜 시작
+
+        yield return new WaitForSeconds(recoveryTime); // 후딜 대기
+
+        // 후딜 중에 착지 이벤트가 발생하면 이 코루틴이 중단되고 FinishAttack()가 호출됨. (HandleLanded()에서)
+
+        FinishAttack();     // 공격 종료
+    }
+
+    // 착지 이벤트에서 호출되는 함수. 공중에서 공격 시작 후 착지 시 후딜을 캔슬함.
+    private void HandleLanded()
+    {
+        if (!isAttacking)
+            return;
+
+        if (!startedInAir)
+            return;
+
+        if (!isInRecovery)
+            return;
+
+        CancelAttackRecovery();
+    }
+
+    // 후딜 캔슬
+    private void CancelAttackRecovery()
+    {
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+        }
+
+        FinishAttack();
+    }
+
+    // 공격 종료. 변수 초기화.
+    private void FinishAttack()
+    {
+        isAttacking = false;
+        startedInAir = false;
+        isInRecovery = false;
+        attackRoutine = null;
+    }
+
+    // 공격 프리팹 생성 (추후 무기별로 다른 공격 프리팹을 생성하도록 수정할 예정)
+    private void SpawnAttack()
+    {
+        // 공격 프리팹으로부터 AttackObject 컴포넌트를 가져와서 null 체크
+        AttackObject prefabAttackObject =
+            attackPrefab.GetComponent<AttackObject>();
+        if (prefabAttackObject == null)
+        {
+            Debug.LogError(
+                $"{attackPrefab.name}에 AttackObject 컴포넌트가 없습니다.",
+                attackPrefab
+            );
+            return;
+        }
+
+        // 공격 프리팹의 생성 오프셋에 현재 바라본 방향을 적용하여 공격 프리팹 생성
+        float facingDirection = Mathf.Sign(transform.localScale.x);
+
+        Vector2 offset = prefabAttackObject.SpawnOffset;
+        offset.x *= facingDirection;
+
+        Vector3 spawnPosition =
+            transform.position + (Vector3)offset;
+
+        GameObject attackInstance = Instantiate(
+            attackPrefab,
+            spawnPosition,
+            Quaternion.identity
+        );
+
+        // 바라본 방향에 맞게 좌우 반전
+        Vector3 attackScale = attackInstance.transform.localScale;
+        attackScale.x *= facingDirection;
+        attackInstance.transform.localScale = attackScale;
     }
 }

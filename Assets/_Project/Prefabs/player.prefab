@@ -242,6 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 7639283283025640474}
+  physics: {fileID: 4551536752873293882}
   attack: {fileID: 5957106499548134616}
 --- !u!114 &7639283283025640474
 MonoBehaviour:
@@ -308,6 +309,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 192ee40dba39c7545b30f688874657f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physics: {fileID: 4551536752873293882}
+  attackPrefab: {fileID: 1809127264511943978, guid: 85ad96f906fbaa2429ed3988ebc68981, type: 3}
+  startupTime: 0.12
+  recoveryTime: 0.28
 --- !u!95 &150835140093219318
 Animator:
   serializedVersion: 7
@@ -356,7 +361,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1001 &6072028264878097924
 PrefabInstance:
   m_ObjectHideFlags: 0
