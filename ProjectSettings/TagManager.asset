@@ -12,9 +12,9 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
-  - 
+  - Player
+  - Monster
+  - Attack Object
   - 
   - 
   - 
@@ -41,8 +41,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: ground
+    uniqueID: 3496485671
+    locked: 0
+  - name: monster
+    uniqueID: 1092614663
+    locked: 0
   - name: effect
     uniqueID: 1480739135
+    locked: 0
+  - name: player
+    uniqueID: 256481449
     locked: 0
   m_RenderingLayers:
   - Default
