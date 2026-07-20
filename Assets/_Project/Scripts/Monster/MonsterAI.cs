@@ -1,7 +1,29 @@
 using UnityEngine;
-
+/// <summary>
+/// 몬스터의 AI를 담당한다.
+/// 상태는 4가지로 나뉜다.
+/// Idle : 순찰도 안 하고 플레이어도 감지되지 않은 상태
+/// Patrol : 순찰 중인 상태
+/// Chase : 플레이어를 감지하고 추적 중인 상태
+/// Attack : 플레이어를 감지하고 공격 중인 상태(이동 정지)
+/// 추적 중 벽이나 낭떠러지를 만나면 그 자리에서 정지한다.
+/// </summary>
 public class MonsterAI : MonoBehaviour
 {
+    public enum MonsterState
+    {
+        Idle,
+        Patrol,
+        Chase,
+        Attack
+    }
+
+    [Header("Target")]
+    [SerializeField] private Transform target;
+
+    [Header("Detection")]
+    [SerializeField] private float detectionRange = 5f;
+    [SerializeField] private float attackRange = 1.2f;
 
     [Header("Patrol")]
     [SerializeField] private bool patrolEnabled = true;
@@ -15,25 +37,82 @@ public class MonsterAI : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckDistance = 0.4f;
 
+    public MonsterState CurrentState { get; private set; }
+
     public float MoveDirection { get; private set; } = 1f;
 
-    private bool isTurnBlocked;
+    public bool ShouldMove { get; private set; }
 
     public bool PatrolEnabled => patrolEnabled;
 
+    private bool isTurnBlocked;
 
     private void Update()
     {
-        if (!patrolEnabled)
+        UpdateState();
+        UpdateBehaviour();
+    }
+
+    private void UpdateState()
+    {
+        if (target == null)
         {
-            isTurnBlocked = false;
+            CurrentState = patrolEnabled
+                ? MonsterState.Patrol
+                : MonsterState.Idle;
+
             return;
         }
 
-        UpdatePatrol();
+        float distanceToTarget = Vector2.Distance(
+            transform.position,
+            target.position
+        );
+
+        if (distanceToTarget <= attackRange)
+        {
+            CurrentState = MonsterState.Attack;
+        }
+        else if (distanceToTarget <= detectionRange)
+        {
+            CurrentState = MonsterState.Chase;
+        }
+        else
+        {
+            CurrentState = patrolEnabled
+                ? MonsterState.Patrol
+                : MonsterState.Idle;
+        }
     }
 
-    // raycast를 이용하여 벽과 땅을 감지하고, 벽이 있거나 땅이 없으면 방향을 바꾼다.
+    private void UpdateBehaviour()
+    {
+        switch (CurrentState)
+        {
+            case MonsterState.Idle:
+                UpdateIdle();
+                break;
+
+            case MonsterState.Patrol:
+                UpdatePatrol();
+                break;
+
+            case MonsterState.Chase:
+                UpdateChase();
+                break;
+
+            case MonsterState.Attack:
+                UpdateAttack();
+                break;
+        }
+    }
+
+    private void UpdateIdle()
+    {
+        ShouldMove = false;
+        isTurnBlocked = false;
+    }
+
     private void UpdatePatrol()
     {
         bool wallAhead = IsWallAhead();
@@ -50,9 +129,46 @@ public class MonsterAI : MonoBehaviour
         {
             isTurnBlocked = false;
         }
+
+        ShouldMove = true;
     }
 
-    // 순찰 활성화/비활성화
+    private void UpdateChase()
+    {
+        UpdateDirectionToTarget();
+
+        bool wallAhead = IsWallAhead();
+        bool groundAhead = IsGroundAhead();
+
+        // 추적 중에는 장애물을 만났다고 반대 방향으로 도망가지 않고
+        // 그 자리에서 정지한다.
+        ShouldMove = !wallAhead && groundAhead;
+
+        isTurnBlocked = false;
+    }
+
+    private void UpdateAttack()
+    {
+        UpdateDirectionToTarget();
+
+        ShouldMove = false;
+        isTurnBlocked = false;
+    }
+
+    private void UpdateDirectionToTarget()
+    {
+        if (target == null)
+            return;
+
+        float horizontalDifference =
+            target.position.x - transform.position.x;
+
+        if (Mathf.Abs(horizontalDifference) < 0.01f)
+            return;
+
+        MoveDirection = Mathf.Sign(horizontalDifference);
+    }
+
     public void SetPatrolEnabled(bool enabled)
     {
         patrolEnabled = enabled;
@@ -68,9 +184,11 @@ public class MonsterAI : MonoBehaviour
         MoveDirection *= -1f;
     }
 
-    // 전방에 벽이 있으면 true
     private bool IsWallAhead()
     {
+        if (wallCheck == null)
+            return false;
+
         Vector2 direction = Vector2.right * MoveDirection;
 
         RaycastHit2D hit = Physics2D.Raycast(
@@ -89,9 +207,11 @@ public class MonsterAI : MonoBehaviour
         return hit.collider != null;
     }
 
-    // 전방에 땅이 있으면 true
     private bool IsGroundAhead()
     {
+        if (groundCheck == null)
+            return true;
+
         RaycastHit2D hit = Physics2D.Raycast(
             groundCheck.position,
             Vector2.down,
@@ -108,19 +228,22 @@ public class MonsterAI : MonoBehaviour
         return hit.collider != null;
     }
 
-    private void OnDrawGizmos()
+    private void OnValidate()
     {
-        if (wallCheck == null)
-            return;
+        detectionRange = Mathf.Max(0f, detectionRange);
+        attackRange = Mathf.Clamp(
+            attackRange,
+            0f,
+            detectionRange
+        );
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
 
         Gizmos.color = Color.red;
-
-        Vector3 direction =
-            Vector3.right * MoveDirection * wallCheckDistance;
-
-        Gizmos.DrawLine(
-            wallCheck.position,
-            wallCheck.position + direction
-        );
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

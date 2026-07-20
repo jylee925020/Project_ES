@@ -17,26 +17,36 @@ public class MonsterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!ai.PatrolEnabled)
-        {
-            movement.Stop();
-            return;
-        }
         float direction = ai.MoveDirection;
 
-        movement.Move(direction);
+        UpdateFacing(direction);
 
-        if (direction != previousDirection)
+        if (ai.ShouldMove)
         {
-            FlipBody(direction);
-            previousDirection = direction;
+            movement.Move(direction);
         }
+        else
+        {
+            movement.Stop();
+        }
+    }
+
+    private void UpdateFacing(float direction)
+    {
+        if (Mathf.Approximately(direction, previousDirection))
+            return;
+
+        FlipBody(direction);
+        previousDirection = direction;
     }
 
     private void FlipBody(float direction)
     {
         Vector3 scale = body.localScale;
-        scale.x = Mathf.Abs(scale.x) * Mathf.Sign(direction);
+
+        scale.x =
+            Mathf.Abs(scale.x) * Mathf.Sign(direction);
+
         body.localScale = scale;
     }
 }
