@@ -3,6 +3,7 @@ using UnityEngine;
 public class MonsterHealth : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 3;
+    public int MaxHealth => maxHealth;
     [SerializeField] private MonsterAI monsterAI;
     [SerializeField] private MonsterMovement monsterMovement;
 

@@ -133,6 +133,8 @@ public class AttackObject : MonoBehaviour
         playerHealth.TakeDamage(damage);
     }
 
+
+    #region Static Spawn Methods
     // 공격 오브젝트를 자식으로 생성함. (근접 등 부착되어 있어야 하는 공격 오브젝트)
     public static AttackObject SpawnAsChild(
         AttackObject prefab,
@@ -197,4 +199,5 @@ public class AttackObject : MonoBehaviour
 
         return true;
     }
+    #endregion
 }

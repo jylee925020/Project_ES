@@ -14,21 +14,20 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float acceleration = 60f;
     [SerializeField] private float deceleration = 80f;
 
-    private float moveInputX;
 
     // canChangeFacing을 false로 설정하면 방향 전환 없이 이동만 함
     public void Move(float inputX, bool canChangeFacing = true)
     {
-        moveInputX = inputX;
+        inputX = Mathf.Clamp(inputX, -1f, 1f);
 
         if (canChangeFacing)
         {
-            UpdateFacing(moveInputX);
+            UpdateFacing(inputX);
         }
 
-        if (Mathf.Abs(moveInputX) > 0.01f)
+        if (Mathf.Abs(inputX) > 0.01f)
         {
-            float targetVelocityX = moveInputX * moveSpeed;
+            float targetVelocityX = inputX * moveSpeed;
             physics.MoveVelocityX(targetVelocityX, acceleration);
         }
         else
@@ -40,7 +39,6 @@ public class PlayerMovement : MonoBehaviour
     // 즉시 좌우 속도를 0으로 만들어 이동을 멈춤
     public void StopImmediately()
     {
-        moveInputX = 0f;
         physics.SetVelocityX(0f);
     }
 

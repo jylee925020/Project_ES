@@ -59,16 +59,9 @@ public class MonsterAttack : MonoBehaviour
 
     private void SpawnAttackObject()
     {
-        if (attackPrefab == null || attackPoint == null)
-            return;
-
-        AttackObject attackObject = Instantiate(
+        AttackObject.SpawnAsChild(
             attackPrefab,
-            attackPoint.position,
-            attackPoint.rotation
-        );
-
-        attackObject.Initialize(
+            attackPoint,
             attackDamage,
             AttackFaction.Monster
         );

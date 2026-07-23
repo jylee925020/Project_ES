@@ -30,8 +30,6 @@ public class PlayerAttack : MonoBehaviour
     private bool startedInAir;           // 공격 시작 시 공중이었는지
 
     // 공중에서 공격 중일 때 선딜 중에 착지하면 지상 공격으로 전환됨.
-    [SerializeField] private float landingStartupTime = 0.05f;   // 선딜 중 착지 시 지상 공격으로 전환되는 시간
-    private bool isInStartup;            // 현재 선딜 중인지
     private bool isInRecovery;           // 현재 후딜 중인지
 
 
@@ -61,14 +59,12 @@ public class PlayerAttack : MonoBehaviour
     private IEnumerator AttackRoutine(float currentStartupTime)
     {
         isAttacking = true;
-        isInStartup = true;
         isInRecovery = false;
 
         OnAttacked?.Invoke("Swing_1");  // 공격 이벤트 호출 (애니메이션 , 사운드 등 에서 사용)
         // 추후 무기별로 다른 이벤트를 호출하도록 수정할 예정
 
         yield return new WaitForSeconds(currentStartupTime); // 선딜 대기
-        isInStartup = false;    // 선딜 종료
 
         SpawnAttack();          // 공격 프리팹 생성
 
@@ -87,13 +83,6 @@ public class PlayerAttack : MonoBehaviour
         if (!isAttacking || !startedInAir)
             return;
 
-        // 선딜 중에 착지하면 지상 공격으로 전환
-        if (isInStartup)
-        {
-            ConvertToGroundAttack();
-            return;
-        }
-
         // 후딜 중에 착지하면 후딜만 캔슬
         if (isInRecovery)
         {
@@ -101,23 +90,6 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    // 지상 공격으로 전환
-    private void ConvertToGroundAttack()
-    {
-        if (attackRoutine != null)
-        {
-            StopCoroutine(attackRoutine);
-        }
-
-        startedInAir = false;
-        isInStartup = false;
-        isInRecovery = false;
-        attackRoutine = null;
-
-        attackRoutine = StartCoroutine(
-            AttackRoutine(landingStartupTime)
-        );
-    }
 
     // 후딜 캔슬
     private void CancelAttackRecovery()
@@ -135,7 +107,6 @@ public class PlayerAttack : MonoBehaviour
     {
         isAttacking = false;
         startedInAir = false;
-        isInStartup = false;
         isInRecovery = false;
         attackRoutine = null;
     }
