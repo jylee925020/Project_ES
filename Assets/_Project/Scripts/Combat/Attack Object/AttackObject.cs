@@ -1,26 +1,39 @@
+/// <summary>
+/// 공격 오브젝트의 수명, 시각 효과, 피격 판정을 담당한다.
+/// - 공격 오브젝트의 수명 관리
+/// - 공격 오브젝트의 시각 효과 관리
+/// - 공격 오브젝트의 피격 판정 관리
+/// </summary>
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 공격 프리팹의 수명, 시각 효과, 피격 판정을 담당한다.
-/// </summary>
+// 공격 주체의 구분. 시전하는 측에서 결정함.
+public enum AttackFaction
+{
+    Player,
+    Monster
+}
+
 public class AttackObject : MonoBehaviour
 {
-    [Header("Spawn")]
-    [SerializeField] private Vector2 spawnOffset;
-    public Vector2 SpawnOffset => spawnOffset;
 
     [Header("Lifetime")]
     [SerializeField] private float lifetime = 1f;
 
+    [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    private readonly HashSet<MonsterHealth> damagedMonsters = new();    // 여러번 피격 방지
+    private readonly HashSet<MonsterHealth> damagedMonsters = new();
+    private readonly HashSet<PlayerHealth> damagedPlayers = new();
 
     private Color originalColor;
     private float elapsedTime;
-    private int damage;
 
+    private int damage;
+    private AttackFaction faction;
+    private bool isInitialized;
+
+    #region lifecycle & initialization
     private void Awake()
     {
         if (spriteRenderer == null)
@@ -34,16 +47,21 @@ public class AttackObject : MonoBehaviour
         }
     }
 
-    public void Initialize(int attackDamage)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        damage = attackDamage;
+        TryDamage(other);
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        TryDamage(other);
     }
 
     private void Update()
     {
         elapsedTime += Time.deltaTime;
 
-        if (spriteRenderer != null)
+        if (spriteRenderer != null && lifetime > 0f)
         {
             float progress = Mathf.Clamp01(elapsedTime / lifetime);
 
@@ -58,8 +76,35 @@ public class AttackObject : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void Initialize(int attackDamage, AttackFaction attackFaction)
+    {
+        damage = attackDamage;
+        faction = attackFaction;
+        isInitialized = true;
+    }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    #endregion
+
+    // 충돌 시도 및 시전 진영에 따른 피격 처리
+    private void TryDamage(Collider2D other)
+    {
+        if (!isInitialized)
+            return;
+
+        switch (faction)
+        {
+            case AttackFaction.Player:
+                TryDamageMonster(other);
+                break;
+
+            case AttackFaction.Monster:
+                TryDamagePlayer(other);
+                break;
+        }
+    }
+
+    // 상대가 몬스터인 경우
+    private void TryDamageMonster(Collider2D other)
     {
         MonsterHealth monsterHealth =
             other.GetComponentInParent<MonsterHealth>();
@@ -71,5 +116,85 @@ public class AttackObject : MonoBehaviour
             return;
 
         monsterHealth.TakeDamage(damage);
+    }
+
+    // 상대가 플레이어인 경우
+    private void TryDamagePlayer(Collider2D other)
+    {
+        PlayerHealth playerHealth =
+            other.GetComponentInParent<PlayerHealth>();
+
+        if (playerHealth == null)
+            return;
+
+        if (!damagedPlayers.Add(playerHealth))
+            return;
+
+        playerHealth.TakeDamage(damage);
+    }
+
+    // 공격 오브젝트를 자식으로 생성함. (근접 등 부착되어 있어야 하는 공격 오브젝트)
+    public static AttackObject SpawnAsChild(
+        AttackObject prefab,
+        Transform attackPoint,
+        int damage,
+        AttackFaction faction)
+    {
+        if (!ValidateSpawnArguments(prefab, attackPoint))
+            return null;
+
+        AttackObject instance = Instantiate(
+            prefab,
+            attackPoint
+        );
+
+        instance.transform.localPosition = Vector3.zero;
+        instance.transform.localRotation = Quaternion.identity;
+        instance.transform.localScale = Vector3.one;
+
+        instance.Initialize(damage, faction);
+
+        return instance;
+    }
+
+    // 공격 오브젝트를 독립적으로 생성함. (원거리 등 독립적으로 존재해야 하는 공격 오브젝트)
+    public static AttackObject SpawnIndependent(
+        AttackObject prefab,
+        Transform attackPoint,
+        int damage,
+        AttackFaction faction)
+    {
+        if (!ValidateSpawnArguments(prefab, attackPoint))
+            return null;
+
+        AttackObject instance = Instantiate(
+            prefab,
+            attackPoint.position,
+            attackPoint.rotation
+        );
+
+        instance.Initialize(damage, faction);
+
+        return instance;
+    }
+
+    // 생성 인자 유효성 검사
+    private static bool ValidateSpawnArguments(
+        AttackObject prefab,
+        Transform attackPoint)
+    {
+        if (prefab == null)
+        {
+            Debug.LogError("생성할 AttackObject 프리팹이 없습니다.");
+            return false;
+        }
+
+        if (attackPoint == null)
+        {
+            Debug.LogError("AttackPoint가 지정되지 않았습니다.");
+            return false;
+        }
+
+        return true;
     }
 }

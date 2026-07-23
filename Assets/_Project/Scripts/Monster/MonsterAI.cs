@@ -21,7 +21,7 @@ public class MonsterAI : MonoBehaviour
     [Header("Target")]
     [SerializeField] private Transform target;
 
-    [Header("Detection")]
+    [Header("Player Detection")]
     [SerializeField] private float detectionRange = 5f;
     [SerializeField] private float attackRange = 1.2f;
 
@@ -47,12 +47,22 @@ public class MonsterAI : MonoBehaviour
 
     private bool isTurnBlocked;
 
+    private MonsterAttack monsterAttack;
+
+    private void Awake()
+    {
+        monsterAttack = GetComponent<MonsterAttack>();
+    }
+
+
+    // 상태를 업데이트하고, 상태에 따른 행동을 수행한다.
     private void Update()
     {
         UpdateState();
         UpdateBehaviour();
     }
 
+    // 상태를 업데이트한다.(Idle, Patrol, Chase, Attack)
     private void UpdateState()
     {
         if (target == null)
@@ -85,6 +95,8 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
+
+    // 상태에 따라 행동한다. (Idle, Patrol, Chase, Attack)
     private void UpdateBehaviour()
     {
         switch (CurrentState)
@@ -153,6 +165,11 @@ public class MonsterAI : MonoBehaviour
 
         ShouldMove = false;
         isTurnBlocked = false;
+
+        if (monsterAttack != null)
+        {
+            monsterAttack.TryAttack();
+        }
     }
 
     private void UpdateDirectionToTarget()
@@ -238,6 +255,7 @@ public class MonsterAI : MonoBehaviour
         );
     }
 
+    // 감지 범위는 노란 원, 공격 범위는 빨간 원으로 표시
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

@@ -13,10 +13,12 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private PlayerPhysics physics;
 
     [Header("Temporary Attack")]        // 추후 무기가 보유하게 할 데이터들. 임시로 여기서 지정함.
-    [SerializeField] private int attackDamage = 1;          // 공격력
-    [SerializeField] private GameObject attackPrefab;       // 공격 프리팹(히트박스, 이펙트)
+    [SerializeField] private AttackObject attackPrefab;          // 공격 프리팹
+    [SerializeField] private Transform attackSpawnPoint;    // 공격 프리팹 생성 위치 
     [SerializeField] private float startupTime = 0.12f;     // 선딜
     [SerializeField] private float recoveryTime = 0.28f;    // 후딜
+    [SerializeField] private int attackDamage = 1;          // 공격력
+
 
     public event Action<string> OnAttacked;
 
@@ -141,41 +143,11 @@ public class PlayerAttack : MonoBehaviour
     // 공격 프리팹 생성 (추후 무기별로 다른 공격 프리팹을 생성하도록 수정할 예정)
     private void SpawnAttack()
     {
-        // 공격 프리팹으로부터 AttackObject 컴포넌트를 가져와서 null 체크
-        AttackObject prefabAttackObject =
-            attackPrefab.GetComponent<AttackObject>();
-        if (prefabAttackObject == null)
-        {
-            Debug.LogError(
-                $"{attackPrefab.name}에 AttackObject 컴포넌트가 없습니다.",
-                attackPrefab
-            );
-            return;
-        }
-
-        // 공격 프리팹의 생성 오프셋에 현재 바라본 방향을 적용하여 공격 프리팹 생성
-        float facingDirection = Mathf.Sign(transform.localScale.x);
-
-        Vector2 offset = prefabAttackObject.SpawnOffset;
-        offset.x *= facingDirection;
-
-        Vector3 spawnPosition =
-            transform.position + (Vector3)offset;
-
-        GameObject attackInstance = Instantiate(
+        AttackObject.SpawnAsChild(
             attackPrefab,
-            spawnPosition,
-            Quaternion.identity
+            attackSpawnPoint,
+            attackDamage,
+            AttackFaction.Player
         );
-
-        // 바라본 방향에 맞게 좌우 반전
-        Vector3 attackScale = attackInstance.transform.localScale;
-        attackScale.x *= facingDirection;
-        attackInstance.transform.localScale = attackScale;
-
-        // 공격력 전달
-        AttackObject attackObject =
-            attackInstance.GetComponent<AttackObject>();
-        attackObject.Initialize(attackDamage);
     }
 }
