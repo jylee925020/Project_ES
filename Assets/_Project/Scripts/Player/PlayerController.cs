@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private PlayerPhysics physics;
     [SerializeField] private PlayerAttack attack;
+    [SerializeField] private PlayerState state;
 
     private float lastPressedDirection;     // 마지막으로 눌린 방향키를 저장하여 양쪽 키를 동시에 누를 때 이동 방향을 결정
 
@@ -80,14 +81,12 @@ public class PlayerController : MonoBehaviour
 
     private void HandleAttackingMovement(float moveX)
     {
-        // 지상에선 공격시 좌우 이동 멈춤
-        if (physics.IsGrounded)
+        if (state.IsGrounded)
         {
             movement.StopImmediately();
             return;
         }
 
-        // 공중에선 공격 중에 방향은 유지된 상태에서 좌우 이동 가능
         movement.Move(moveX, false);
     }
 

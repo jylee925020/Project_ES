@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private PlayerPhysics physics;
+    [SerializeField] private PlayerState state;
 
     #region Move
     [Header("Move")]
@@ -54,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        if (!physics.IsGrounded)
+        if (!state.IsGrounded)
             return;
 
         physics.SetVelocityY(jumpPower);

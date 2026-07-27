@@ -11,6 +11,7 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private PlayerPhysics physics;
+    [SerializeField] private PlayerState state;
 
     [Header("Temporary Attack")]        // 추후 무기가 보유하게 할 데이터들. 임시로 여기서 지정함.
     [SerializeField] private AttackObject attackPrefab;          // 공격 프리팹
@@ -51,7 +52,7 @@ public class PlayerAttack : MonoBehaviour
         if (isAttacking)
             return;
 
-        startedInAir = !physics.IsGrounded;
+        startedInAir = !state.IsGrounded;
         attackRoutine = StartCoroutine(AttackRoutine(startupTime));
     }
 
