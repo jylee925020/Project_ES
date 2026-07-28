@@ -6,8 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private PlayerPhysics physics;
-    [SerializeField] private PlayerState state;
+    private PlayerPhysics physics;
+    private PlayerState state;
 
     #region Move
     [Header("Move")]
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Facing")]
     [SerializeField] private Transform playerRoot;
 
-    public bool IsFacingRight { get; private set; } = true;
+    public bool IsFacingRight => state.IsFacingRight;   
 
     private void UpdateFacing(float inputX)
     {
@@ -92,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
         if (IsFacingRight)
             return;
 
-        IsFacingRight = true;
+        state.SetFacingRight(true);
         SetRootScaleX(1f);
     }
 
@@ -101,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
         if (!IsFacingRight)
             return;
 
-        IsFacingRight = false;
+        state.SetFacingRight(false);
         SetRootScaleX(-1f);
     }
 
@@ -110,6 +110,15 @@ public class PlayerMovement : MonoBehaviour
         Vector3 scale = playerRoot.localScale;
         scale.x = Mathf.Abs(scale.x) * sign;
         playerRoot.localScale = scale;
+    }
+
+    #endregion
+
+    #region lifecycle
+    private void Awake()
+    {
+        physics = GetComponent<PlayerPhysics>();
+        state = GetComponent<PlayerState>();
     }
 
     #endregion

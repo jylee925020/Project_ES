@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -9,8 +8,6 @@ public class PlayerPhysics : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerState state;
-
-    public event Action OnLanded;
 
     public float CurrentVelocityX => rb.linearVelocity.x;
     public float CurrentVelocityY => rb.linearVelocity.y;
@@ -27,11 +24,9 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.5f, 0.1f);
     [SerializeField] private LayerMask groundLayer;
 
-    // 기존 코드와의 호환을 위해 아직 유지한다.
-    public bool IsGrounded { get; private set; }
-
     private bool groundStateInitialized;
 
+    // OverlapBox를 사용하여 플레이어가 지면에 닿아 있는지 확인하고, PlayerState에 상태를 업데이트한다.
     private void CheckGrounded()
     {
         bool newIsGrounded = Physics2D.OverlapBox(
@@ -44,24 +39,20 @@ public class PlayerPhysics : MonoBehaviour
         // 최초 검사에서는 착지 이벤트를 발생시키지 않는다.
         if (!groundStateInitialized)
         {
-            IsGrounded = newIsGrounded;
-            state.SetGrounded(newIsGrounded);
-
+            state.InitializeGrounded(newIsGrounded);
             groundStateInitialized = true;
             return;
         }
 
-        bool landedThisFrame = !IsGrounded && newIsGrounded;
-
-        // 상태를 먼저 갱신한 뒤 이벤트를 발생시킨다.
-        // 이벤트 수신자가 현재 접지 상태를 읽을 때 최신 값을 얻을 수 있다.
-        IsGrounded = newIsGrounded;
-        state.SetGrounded(newIsGrounded);
-
-        if (landedThisFrame)
+        // 최초 검사는 상태만 초기화하고 전이 이벤트를 발생시키지 않는다.
+        if (!groundStateInitialized)
         {
-            OnLanded?.Invoke();
+            state.InitializeGrounded(newIsGrounded);
+            groundStateInitialized = true;
+            return;
         }
+
+        state.SetGrounded(newIsGrounded);
     }
 
     private void OnDrawGizmosSelected()

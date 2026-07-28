@@ -7,9 +7,11 @@ using UnityEngine;
 public class PlayerAnimation : MonoBehaviour
 {
     [SerializeField] private Animator animator;
-    [SerializeField] private PlayerMovement movement;
-    [SerializeField] private PlayerPhysics physics;
-    [SerializeField] private PlayerAttack attack;
+    private PlayerMovement movement;
+    private PlayerPhysics physics;
+    private PlayerAttack attack;
+    private PlayerState state;
+
 
     private static readonly int JumpHash = Animator.StringToHash("Jump");
     private static readonly int IsGroundedHash = Animator.StringToHash("IsGrounded");
@@ -18,6 +20,13 @@ public class PlayerAnimation : MonoBehaviour
 
 
     #region life cycle
+    private void Awake()
+    {
+        movement = GetComponent<PlayerMovement>();
+        physics = GetComponent<PlayerPhysics>();
+        attack = GetComponent<PlayerAttack>();
+        state = GetComponent<PlayerState>();
+    }
     private void OnEnable()
     {
         movement.OnJumped += PlayJump;
@@ -38,7 +47,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void UpdateState()
     {
-        animator.SetBool(IsGroundedHash, physics.IsGrounded);
+        animator.SetBool(IsGroundedHash, state.IsGrounded);
         animator.SetBool(IsRunningHash, Mathf.Abs(physics.CurrentVelocityX) > 0.01f);
     }
 
@@ -51,7 +60,7 @@ public class PlayerAnimation : MonoBehaviour
     // 무기로부터 공격 모션 이름을 받아서 애니메이션을 재생함.
     private void PlayAttack(string motionName)
     {
-        string stateName = physics.IsGrounded
+        string stateName = state.IsGrounded
             ? $"Ground_{motionName}"
             : $"Air_{motionName}";
 
