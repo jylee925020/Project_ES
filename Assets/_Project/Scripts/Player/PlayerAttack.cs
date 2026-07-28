@@ -22,15 +22,18 @@ public class PlayerAttack : MonoBehaviour
 
     public event Action<string> OnAttacked;
 
-    private bool isAttacking;
-    public bool IsAttacking => isAttacking;
-
     private Coroutine attackRoutine;     // 현재 공격 코루틴
 
     private bool startedInAir;           // 공격 시작 시 공중이었는지
 
-    // 공중에서 공격 중일 때 선딜 중에 착지하면 지상 공격으로 전환됨.
-    private bool isInRecovery;           // 현재 후딜 중인지
+    private enum AttackPhase
+    {
+        None,
+        Startup,
+        Recovery
+    }
+
+    private AttackPhase currentPhase;
 
 
     #region lifecycle
@@ -41,19 +44,23 @@ public class PlayerAttack : MonoBehaviour
     private void OnEnable()
     {
         state.OnLanded += HandleLanded;
+        state.OnActionChanged += HandleActionChanged;
     }
 
     private void OnDisable()
     {
         state.OnLanded -= HandleLanded;
+        state.OnActionChanged -= HandleActionChanged;
     }
     #endregion
 
     // 공격 실행
     public void Attack()
     {
-        if (isAttacking)
+        if (!state.CanAttack)   // 공격 불가 상태면 공격하지 않음
             return;
+
+        state.BeginAction(PlayerActionType.Attack);  // 공격 상태 시작
 
         startedInAir = !state.IsGrounded;
         attackRoutine = StartCoroutine(AttackRoutine(startupTime));
@@ -62,8 +69,7 @@ public class PlayerAttack : MonoBehaviour
     // 공격 코루틴, 선딜을 설정할 수 있음.
     private IEnumerator AttackRoutine(float currentStartupTime)
     {
-        isAttacking = true;
-        isInRecovery = false;
+        currentPhase = AttackPhase.Startup;
 
         OnAttacked?.Invoke("Swing_1");  // 공격 이벤트 호출 (애니메이션 , 사운드 등 에서 사용)
         // 추후 무기별로 다른 이벤트를 호출하도록 수정할 예정
@@ -72,7 +78,7 @@ public class PlayerAttack : MonoBehaviour
 
         SpawnAttack();          // 공격 프리팹 생성
 
-        isInRecovery = true;    // 후딜 시작
+        currentPhase = AttackPhase.Recovery; // 후딜 상태로 전환
 
         yield return new WaitForSeconds(recoveryTime); // 후딜 대기
 
@@ -84,34 +90,33 @@ public class PlayerAttack : MonoBehaviour
     // 착지 이벤트에서 호출되는 함수. 공격 중에 착지 시를 처리함.
     private void HandleLanded()
     {
-        if (!isAttacking || !startedInAir)
+        if (!state.IsAttacking || !startedInAir)
             return;
 
-        // 후딜 중에 착지하면 후딜만 캔슬
-        if (isInRecovery)
+        // 후딜 중에 착지하면 캔슬
+        if (currentPhase == AttackPhase.Recovery)
         {
-            CancelAttackRecovery();
+            CancelAttack();
         }
     }
 
 
-    // 후딜 캔슬
-    private void CancelAttackRecovery()
+    // 공격 코루틴 캔슬
+    private void CancelAttack()
     {
         if (attackRoutine != null)
         {
             StopCoroutine(attackRoutine);
         }
-
         FinishAttack();
     }
 
     // 공격 종료. 변수 초기화.
     private void FinishAttack()
     {
-        isAttacking = false;
+        state.EndAction(PlayerActionType.Attack);  // 공격 상태 종료
         startedInAir = false;
-        isInRecovery = false;
+        currentPhase = AttackPhase.None;
         attackRoutine = null;
     }
 
@@ -124,5 +129,12 @@ public class PlayerAttack : MonoBehaviour
             attackDamage,
             AttackFaction.Player
         );
+    }
+
+    // 액션 변경 이벤트에 호출됨
+    private void HandleActionChanged(PlayerActionType action)
+    {
+        // 사망 시 공격 루틴 취소
+        if (action == PlayerActionType.Dead) CancelAttack();
     }
 }

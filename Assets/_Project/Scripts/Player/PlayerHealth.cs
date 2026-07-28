@@ -5,21 +5,29 @@ using UnityEngine;
 /// </summary>
 public class PlayerHealth : MonoBehaviour
 {
+    private PlayerState state;
+    private PlayerHitReaction hitReaction;
+
     [Header("Health")]
     [SerializeField] private int maxHealth = 10;
 
     public int CurrentHealth { get; private set; }
     public int MaxHealth => maxHealth;
-    public bool IsDead { get; private set; }
 
+    #region lifecycle
+    
     private void Awake()
     {
+        state = GetComponent<PlayerState>();
+        hitReaction = GetComponent<PlayerHitReaction>();
         CurrentHealth = maxHealth;
     }
 
+    #endregion
+
     public void TakeDamage(int damage)
     {
-        if (IsDead || damage <= 0)
+        if (state.IsDead || damage <= 0)
             return;
 
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
@@ -31,12 +39,15 @@ public class PlayerHealth : MonoBehaviour
         if (CurrentHealth == 0)
         {
             Die();
+            return;
         }
+
+        hitReaction.ApplyHitStun();
     }
 
     private void Die()
     {
-        IsDead = true;
+        state.SetDead();
 
         Debug.Log($"{name} 사망");
 

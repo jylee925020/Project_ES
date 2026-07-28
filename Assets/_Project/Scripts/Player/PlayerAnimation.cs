@@ -64,6 +64,6 @@ public class PlayerAnimation : MonoBehaviour
             ? $"Ground_{motionName}"
             : $"Air_{motionName}";
 
-        animator.Play(stateName);
+        animator.Play(stateName, 0, 0f);
     }
 }

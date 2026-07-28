@@ -74,42 +74,13 @@ public class PlayerMovement : MonoBehaviour
 
     #region Facing
 
-    [Header("Facing")]
-    [SerializeField] private Transform playerRoot;
-
-    public bool IsFacingRight => state.IsFacingRight;   
-
     private void UpdateFacing(float inputX)
     {
         if (inputX > 0f)
-            FaceRight();
+            state.SetFacingRight(true);
+
         else if (inputX < 0f)
-            FaceLeft();
-    }
-
-    private void FaceRight()
-    {
-        if (IsFacingRight)
-            return;
-
-        state.SetFacingRight(true);
-        SetRootScaleX(1f);
-    }
-
-    private void FaceLeft()
-    {
-        if (!IsFacingRight)
-            return;
-
-        state.SetFacingRight(false);
-        SetRootScaleX(-1f);
-    }
-
-    private void SetRootScaleX(float sign)
-    {
-        Vector3 scale = playerRoot.localScale;
-        scale.x = Mathf.Abs(scale.x) * sign;
-        playerRoot.localScale = scale;
+            state.SetFacingRight(false);
     }
 
     #endregion

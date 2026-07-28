@@ -44,14 +44,6 @@ public class PlayerPhysics : MonoBehaviour
             return;
         }
 
-        // 최초 검사는 상태만 초기화하고 전이 이벤트를 발생시키지 않는다.
-        if (!groundStateInitialized)
-        {
-            state.InitializeGrounded(newIsGrounded);
-            groundStateInitialized = true;
-            return;
-        }
-
         state.SetGrounded(newIsGrounded);
     }
 
@@ -86,6 +78,11 @@ public class PlayerPhysics : MonoBehaviour
             rb.linearVelocity.x,
             velocityY
         );
+    }
+
+    public void SetVelocity(Vector2 velocity)
+    {
+        rb.linearVelocity = velocity;
     }
 
     public void MoveVelocityX(

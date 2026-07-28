@@ -53,17 +53,25 @@ public class PlayerState : MonoBehaviour
 
     #region Facing
 
+    public event Action<bool> OnFacingChanged; // isFacingRight 값도 같이 전달함.
+
     public bool IsFacingRight { get; private set; } = true;
 
     public void SetFacingRight(bool isFacingRight)
     {
+        if (IsFacingRight == isFacingRight)
+            return;
+
         IsFacingRight = isFacingRight;
+        OnFacingChanged?.Invoke(isFacingRight);
     }
 
     #endregion
 
 
     #region Action
+
+    public event Action<PlayerActionType> OnActionChanged;
 
     public PlayerActionType CurrentAction { get; private set; }
         = PlayerActionType.None;
@@ -77,81 +85,64 @@ public class PlayerState : MonoBehaviour
     public bool IsDead =>
         CurrentAction == PlayerActionType.Dead;
 
+    // 새로운 액션을 시작함. 액션이 바뀐다면 이벤트 발행.
     public void BeginAction(PlayerActionType action)
     {
+        if (CurrentAction == action)
+            return;
         CurrentAction = action;
+        OnActionChanged?.Invoke(CurrentAction);
     }
 
+    // 액션 종료도 액션 변경 이벤트를 발생시킴.
     public void EndAction(PlayerActionType action)
     {
         if (CurrentAction != action)
             return;
 
         CurrentAction = PlayerActionType.None;
+        OnActionChanged?.Invoke(CurrentAction);
     }
 
+    // 사망도 액션 변경 이벤트 발생
     public void SetDead()
     {
+        if (CurrentAction == PlayerActionType.Dead)
+            return;
+
         CurrentAction = PlayerActionType.Dead;
+        OnActionChanged?.Invoke(CurrentAction);
     }
 
     #endregion
 
-
+    // 행동 제한을 계산해주는 프로퍼티
     #region Restrictions
 
-    public bool CanMove
-    {
-        get
-        {
-            if (IsDead || IsInHitStun)
-                return false;
+    public bool CanMove =>
+    !IsDead &&
+    !IsInHitStun &&
+    !(IsAttacking && IsGrounded);
 
-            if (CurrentAction == PlayerActionType.Attack && IsGrounded)
-                return false;
+    public bool CanChangeFacing =>
+        !IsDead &&
+        !IsInHitStun &&
+        !IsAttacking;
 
-            return true;
-        }
-    }
+    public bool CanJump =>
+        !IsDead &&
+        !IsInHitStun &&
+        !IsAttacking;
 
-    public bool CanChangeFacing
-    {
-        get
-        {
-            if (IsDead || IsInHitStun)
-                return false;
+    public bool CanAttack =>
+        !IsDead &&
+        !IsInHitStun &&
+        CurrentAction == PlayerActionType.None;
 
-            if (CurrentAction == PlayerActionType.Attack)
-                return false;
-
-            return true;
-        }
-    }
-
-    public bool CanJump
-    {
-        get
-        {
-            if (IsDead || IsInHitStun)
-                return false;
-
-            if (CurrentAction == PlayerActionType.Attack)
-                return false;
-
-            return true;
-        }
-    }
-
-    public bool CanAttack
-    {
-        get
-        {
-            if (IsDead || IsInHitStun)
-                return false;
-
-            return CurrentAction != PlayerActionType.Attack;
-        }
-    }
+    // 사망시, 지상 공격시에만 속도 0으로
+    public bool ShouldStopHorizontalMovement =>
+        IsDead ||
+        (IsAttacking && IsGrounded);
 
     #endregion
 }
