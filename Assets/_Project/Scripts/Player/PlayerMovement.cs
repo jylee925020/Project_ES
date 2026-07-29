@@ -55,9 +55,20 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        if (!state.IsGrounded)
+        if (state.IsGrounded)
+        {
+            PerformJump();
             return;
+        }
 
+        if (state.TryUseAdditionalJump())
+        {
+            PerformJump();
+        }
+    }
+
+    private void PerformJump()
+    {
         physics.SetVelocityY(jumpPower);
         OnJumped?.Invoke();
     }

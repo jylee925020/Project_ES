@@ -24,10 +24,10 @@ public class PlayerState : MonoBehaviour
     public event Action OnLeftGround;
 
     public bool IsGrounded { get; private set; }
-
     public void InitializeGrounded(bool isGrounded)
     {
         IsGrounded = isGrounded;
+        ResetAdditionalJumpCount();
     }
 
     public void SetGrounded(bool isGrounded)
@@ -40,6 +40,7 @@ public class PlayerState : MonoBehaviour
 
         if (!wasGrounded && isGrounded)
         {
+            ResetAdditionalJumpCount();
             OnLanded?.Invoke();
         }
         else
@@ -50,6 +51,31 @@ public class PlayerState : MonoBehaviour
 
     #endregion
 
+    #region Jump
+
+    [SerializeField, Min(0)]
+    private int maxAdditionalJumpCount = 1;
+
+    public int CurrentAdditionalJumpCount { get; private set; }
+
+    public bool CanUseAdditionalJump =>
+        CurrentAdditionalJumpCount > 0;
+
+    public void ResetAdditionalJumpCount()
+    {
+        CurrentAdditionalJumpCount = maxAdditionalJumpCount;
+    }
+
+    public bool TryUseAdditionalJump()
+    {
+        if (!CanUseAdditionalJump)
+            return false;
+
+        CurrentAdditionalJumpCount--;
+        return true;
+    }
+
+    #endregion
 
     #region Facing
 
