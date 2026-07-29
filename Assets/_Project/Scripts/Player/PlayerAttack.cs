@@ -3,10 +3,9 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 플레이어의 공격 실행과 공격 타이밍을 관리하는 클래스
-/// 공격을 누르면 공격 코루틴이 실행되어 선딜, 공격 프리팹 생성, 후딜 순으로 진행됨.
-/// 선딜 중에 착지하면 지상 공격으로 전환되어 나감.
-/// 후딜 중에 착지하면 후딜이 캔슬되어 바로 공격 종료됨.
+/// 플레이어의 공격 실행과 공격 타이밍을 관리한다.
+/// 공격은 선딜, 공격 판정 생성, 후딜 순서로 진행되며
+/// 착지해도 남은 후딜은 유지된다.
 /// </summary>
 public class PlayerAttack : MonoBehaviour
 {
@@ -43,13 +42,11 @@ public class PlayerAttack : MonoBehaviour
     }
     private void OnEnable()
     {
-        state.OnLanded += HandleLanded;
         state.OnActionChanged += HandleActionChanged;
     }
 
     private void OnDisable()
     {
-        state.OnLanded -= HandleLanded;
         state.OnActionChanged -= HandleActionChanged;
     }
     #endregion
@@ -86,20 +83,6 @@ public class PlayerAttack : MonoBehaviour
 
         FinishAttack();     // 공격 종료
     }
-
-    // 착지 이벤트에서 호출되는 함수. 공격 중에 착지 시를 처리함.
-    private void HandleLanded()
-    {
-        if (!state.IsAttacking || !startedInAir)
-            return;
-
-        // 후딜 중에 착지하면 캔슬
-        if (currentPhase == AttackPhase.Recovery)
-        {
-            CancelAttack();
-        }
-    }
-
 
     // 공격 코루틴 캔슬
     private void CancelAttack()

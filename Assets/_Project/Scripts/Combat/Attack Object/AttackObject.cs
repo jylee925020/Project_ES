@@ -33,9 +33,15 @@ public class AttackObject : MonoBehaviour
     private AttackFaction faction;
     private bool isInitialized;
 
+    private readonly List<Collider2D> overlapResults = new();
+    private Collider2D attackCollider;
+    private ContactFilter2D contactFilter;
+
     #region lifecycle & initialization
     private void Awake()
     {
+        attackCollider = GetComponent<Collider2D>();
+
         if (spriteRenderer == null)
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -45,6 +51,11 @@ public class AttackObject : MonoBehaviour
         {
             originalColor = spriteRenderer.color;
         }
+
+        contactFilter = new ContactFilter2D
+        {
+            useTriggers = true
+        };
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -81,6 +92,21 @@ public class AttackObject : MonoBehaviour
         damage = attackDamage;
         faction = attackFaction;
         isInitialized = true;
+
+        CheckCurrentOverlaps();
+    }
+
+    private void CheckCurrentOverlaps()
+    {
+        Physics2D.SyncTransforms();
+
+        overlapResults.Clear();
+        attackCollider.Overlap(contactFilter, overlapResults);
+
+        foreach (Collider2D other in overlapResults)
+        {
+            TryDamage(other);
+        }
     }
 
     #endregion
