@@ -33,6 +33,8 @@ public class AttackObject : MonoBehaviour
     private AttackFaction faction;
     private bool isInitialized;
 
+    private bool canDamage;
+
     private readonly List<Collider2D> overlapResults = new();
     private Collider2D attackCollider;
     private ContactFilter2D contactFilter;
@@ -92,8 +94,19 @@ public class AttackObject : MonoBehaviour
         damage = attackDamage;
         faction = attackFaction;
         isInitialized = true;
+        canDamage = true;
 
         CheckCurrentOverlaps();
+    }
+
+    public void DisableDamage()
+    {
+        canDamage = false;
+
+        if (attackCollider != null)
+        {
+            attackCollider.enabled = false;
+        }
     }
 
     private void CheckCurrentOverlaps()
@@ -114,7 +127,7 @@ public class AttackObject : MonoBehaviour
     // 충돌 시도 및 시전 진영에 따른 피격 처리
     private void TryDamage(Collider2D other)
     {
-        if (!isInitialized)
+        if (!isInitialized || !canDamage)
             return;
 
         switch (faction)

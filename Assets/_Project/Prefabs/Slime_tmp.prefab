@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9025ed58aa5628e4e98e53871fe9bf5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
+  maxHealth: 100
   monsterAI: {fileID: 6628417825471610715}
   monsterMovement: {fileID: 4889917932695542997}
 --- !u!114 &9006914557563822419
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f63ca9968aa7df4db76bcb7da3d0d89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 1
+  attackCooldown: 10
   attackDuration: 0.3
   attackPrefab: {fileID: 5655912595610875080, guid: f7a014d909fe50848931d2c2c212338e, type: 3}
   attackPoint: {fileID: 2348509622130507830}

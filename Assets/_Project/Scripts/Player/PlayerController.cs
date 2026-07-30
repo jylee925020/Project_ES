@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerInputReader inputReader;
     private PlayerMovement movement;
-    private PlayerAttack attack;
+    private PlayerCombat combat;
     private PlayerState state;
 
     #region Lifecycle
@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     {
         inputReader = GetComponent<PlayerInputReader>();
         movement = GetComponent<PlayerMovement>();
-        attack = GetComponent<PlayerAttack>();
+        combat = GetComponent<PlayerCombat>();
         state = GetComponent<PlayerState>();
     }
 
@@ -25,7 +25,13 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleJump();
-        HandleAttack();
+        HandleCombat();
+
+        // 공격 강제 종료 테스트
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            combat.ForceInterruptCurrentAction();
+        }
     }
 
     #endregion
@@ -70,13 +76,21 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region Attack
-    private void HandleAttack()
+    #region Combat
+
+    private void HandleCombat()
     {
         if (inputReader.WeaponQPressed)
-        {
-            attack.Attack();
-        }
+            combat.TryUseSlot(0);
+
+        if (inputReader.WeaponWPressed)
+            combat.TryUseSlot(1);
+
+        if (inputReader.WeaponEPressed)
+            combat.TryUseSlot(2);
+
+        if (inputReader.WeaponRPressed)
+            combat.TryUseSlot(3);
     }
 
     #endregion

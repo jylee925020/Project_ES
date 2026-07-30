@@ -194,6 +194,7 @@ GameObject:
   - component: {fileID: 8849329026059039814}
   - component: {fileID: 7019097561591958656}
   - component: {fileID: 5626333523083012280}
+  - component: {fileID: 7818427772337598018}
   - component: {fileID: 6323005488364743298}
   - component: {fileID: 7863515242094586444}
   - component: {fileID: 7639283283025640474}
@@ -327,6 +328,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c3a179d33067149b1c00e9402ef725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7818427772337598018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438221091232981000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 307d3638289826d45bdef812c3810eff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6323005488364743298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,6 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab74a8c65f7483d4fa0b4f1ad61eda8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxAdditionalJumpCount: 1
 --- !u!114 &7863515242094586444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,6 +415,7 @@ MonoBehaviour:
   attackPrefab: {fileID: 1366670798373687388, guid: 85ad96f906fbaa2429ed3988ebc68981, type: 3}
   attackSpawnPoint: {fileID: 1742529921173132029}
   startupTime: 0.12
+  activeTime: 0.05
   recoveryTime: 0.28
   attackDamage: 1
 --- !u!114 &983486631698173050
