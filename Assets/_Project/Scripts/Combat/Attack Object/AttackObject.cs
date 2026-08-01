@@ -22,15 +22,9 @@ public class AttackObject : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
-
-    private readonly HashSet<MonsterHealth> damagedMonsters = new();
-    private readonly HashSet<PlayerHealth> damagedPlayers = new();
-
     private Color originalColor;
     private float elapsedTime;
 
-    private int damage;
-    private AttackFaction faction;
     private bool isInitialized;
 
     private bool canDamage;
@@ -38,6 +32,9 @@ public class AttackObject : MonoBehaviour
     private readonly List<Collider2D> overlapResults = new();
     private Collider2D attackCollider;
     private ContactFilter2D contactFilter;
+
+    private readonly HashSet<IHitReceiver> hitReceivers = new();    // 중복 피격 방지를 위한 피격 대상들의 HashSet
+    private HitInfo hitInfo;
 
     #region lifecycle & initialization
     private void Awake()
@@ -91,10 +88,8 @@ public class AttackObject : MonoBehaviour
     }
     public void Initialize(int attackDamage, AttackFaction attackFaction)
     {
-        damage = attackDamage;
-        faction = attackFaction;
+        hitInfo = new HitInfo(attackDamage, attackFaction);
         isInitialized = true;
-        canDamage = true;
 
         CheckCurrentOverlaps();
     }
@@ -124,54 +119,21 @@ public class AttackObject : MonoBehaviour
 
     #endregion
 
-    // 충돌 시도 및 시전 진영에 따른 피격 처리
     private void TryDamage(Collider2D other)
     {
-        if (!isInitialized || !canDamage)
+        if (!isInitialized)
             return;
 
-        switch (faction)
-        {
-            case AttackFaction.Player:
-                TryDamageMonster(other);
-                break;
+        IHitReceiver hitReceiver = other.GetComponentInParent<IHitReceiver>();
 
-            case AttackFaction.Monster:
-                TryDamagePlayer(other);
-                break;
-        }
+        if (hitReceiver == null)
+            return;
+
+        if (!hitReceivers.Add(hitReceiver))
+            return;
+
+        hitReceiver.ReceiveHit(hitInfo);
     }
-
-    // 상대가 몬스터인 경우
-    private void TryDamageMonster(Collider2D other)
-    {
-        MonsterHealth monsterHealth =
-            other.GetComponentInParent<MonsterHealth>();
-
-        if (monsterHealth == null)
-            return;
-
-        if (!damagedMonsters.Add(monsterHealth))
-            return;
-
-        monsterHealth.TakeDamage(damage);
-    }
-
-    // 상대가 플레이어인 경우
-    private void TryDamagePlayer(Collider2D other)
-    {
-        PlayerHealth playerHealth =
-            other.GetComponentInParent<PlayerHealth>();
-
-        if (playerHealth == null)
-            return;
-
-        if (!damagedPlayers.Add(playerHealth))
-            return;
-
-        playerHealth.TakeDamage(damage);
-    }
-
 
     #region Static Spawn Methods
     // 공격 오브젝트를 자식으로 생성함. (근접 등 부착되어 있어야 하는 공격 오브젝트)
