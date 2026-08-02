@@ -1,25 +1,22 @@
 using UnityEngine;
+
 /// <summary>
-/// 플레이어의 체력과 관련된 기능을 담당한다.
-/// - 체력과 피해 처리
+/// 플레이어의 체력을 소유하고 변경한다.
+/// 피격 반응과 사망 처리는 담당하지 않는다.
 /// </summary>
 public class PlayerHealth : MonoBehaviour
 {
-    private PlayerState state;
-    private PlayerHitReaction hitReaction;
-
     [Header("Health")]
     [SerializeField] private int maxHealth = 10;
 
     public int CurrentHealth { get; private set; }
     public int MaxHealth => maxHealth;
+    public bool IsDead => CurrentHealth <= 0;
 
-    #region lifecycle
-    
+    #region Lifecycle
+
     private void Awake()
     {
-        state = GetComponent<PlayerState>();
-        hitReaction = GetComponent<PlayerHitReaction>();
         CurrentHealth = maxHealth;
     }
 
@@ -27,7 +24,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (state.IsDead || damage <= 0)
+        if (IsDead || damage <= 0)
             return;
 
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
@@ -35,22 +32,5 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log(
             $"{name} 피격: {damage}, 남은 체력: {CurrentHealth}/{maxHealth}"
         );
-
-        if (CurrentHealth == 0)
-        {
-            Die();
-            return;
-        }
-
-        hitReaction.ApplyHitStun();
-    }
-
-    private void Die()
-    {
-        state.SetDead();
-
-        Debug.Log($"{name} 사망");
-
-        // 이후 입력 차단, 애니메이션, 리스폰 등을 연결한다.
     }
 }

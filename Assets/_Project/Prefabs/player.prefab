@@ -202,6 +202,7 @@ GameObject:
   - component: {fileID: 5957106499548134616}
   - component: {fileID: 983486631698173050}
   - component: {fileID: 7733750429894684459}
+  - component: {fileID: 1396593161322391568}
   m_Layer: 7
   m_Name: player
   m_TagString: Untagged
@@ -316,6 +317,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRoot: {fileID: 4675087659028342909}
+  invincibleAlpha: 0.5
+  blinkInterval: 0.2
 --- !u!114 &5626333523083012280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,6 +449,19 @@ MonoBehaviour:
   hitStunDuration: 0.2
   knockbackPower: 8
   knockbackDirection: {x: -1, y: 1}
+--- !u!114 &1396593161322391568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438221091232981000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d8524aa834ee7d4a98633a3553b77f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invincibilityDuration: 1
 --- !u!1 &8626422542498898155
 GameObject:
   m_ObjectHideFlags: 0

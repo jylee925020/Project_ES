@@ -26,29 +26,26 @@ public class PlayerHitReaction : MonoBehaviour
         physics = GetComponent<PlayerPhysics>();
     }
 
+    public void ApplyKnockback()
+    {
+        Vector2 direction = knockbackDirection.normalized;
+
+        if (!state.IsFacingRight)
+            direction.x = -direction.x;
+
+        physics.SetVelocity(direction * knockbackPower);
+    }
+
     public void ApplyHitStun()
     {
         if (state.IsDead)
             return;
 
-        // 또 맞으면 기존 코루틴 지우고 다시 실행.
         if (hitStunRoutine != null)
-        {
             StopCoroutine(hitStunRoutine);
-        }
+
         state.BeginAction(PlayerActionType.HitStun);
-
-        ApplyHitKnockback();    // 피격 넉백
-
         hitStunRoutine = StartCoroutine(HitStunRoutine());
-    }
-
-    private void ApplyHitKnockback()
-    {
-        Vector2 dir = knockbackDirection.normalized;
-        if (!state.IsFacingRight) dir.x = -dir.x;
-
-        physics.SetVelocity(dir *  knockbackPower);
     }
 
     private IEnumerator HitStunRoutine()

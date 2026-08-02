@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 6628417825471610715}
   - component: {fileID: 1600400786395227630}
   - component: {fileID: 9006914557563822419}
+  - component: {fileID: 7799139499825817867}
   m_Layer: 8
   m_Name: Slime_tmp
   m_TagString: Untagged
@@ -346,6 +347,18 @@ MonoBehaviour:
   attackPrefab: {fileID: 5655912595610875080, guid: f7a014d909fe50848931d2c2c212338e, type: 3}
   attackPoint: {fileID: 2348509622130507830}
   attackDamage: 1
+--- !u!114 &7799139499825817867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6628757416873632280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95044b6941be66542b376e4d49759726, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8841333850497544987
 GameObject:
   m_ObjectHideFlags: 0
