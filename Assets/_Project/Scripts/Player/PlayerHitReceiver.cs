@@ -1,11 +1,10 @@
-using System.Collections;
 using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
 /// 플레이어가 외부 공격을 받는 진입점.
 /// 피격 가능 여부를 검사하고 피해, 사망, 피격 반응을 순서대로 처리한다.
-/// 피격시 무적 시간을 설정하고 적용한다.
 /// </summary>
 [RequireComponent(typeof(PlayerHealth))]
 [RequireComponent(typeof(PlayerState))]
@@ -22,7 +21,7 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
     private bool isInvincible;
     private Coroutine invincibilityRoutine;
 
-    // 이벤트: 무적 시작 및 종료
+    public event Action OnHit;
     public event Action OnInvincibilityStarted;
     public event Action OnInvincibilityEnded;
 
@@ -42,7 +41,6 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
             return;
 
         health.TakeDamage(hitInfo.Damage);
-
         hitReaction.ApplyKnockback();
 
         if (health.IsDead)
@@ -53,6 +51,8 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
 
         hitReaction.ApplyHitStun();
         BeginInvincibility();
+
+        OnHit?.Invoke();
     }
 
     private void BeginInvincibility()
@@ -60,7 +60,8 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
         if (invincibilityRoutine != null)
             StopCoroutine(invincibilityRoutine);
 
-        invincibilityRoutine = StartCoroutine(InvincibilityRoutine());
+        invincibilityRoutine =
+            StartCoroutine(InvincibilityRoutine());
     }
 
     private IEnumerator InvincibilityRoutine()
@@ -68,7 +69,9 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
         isInvincible = true;
         OnInvincibilityStarted?.Invoke();
 
-        yield return new WaitForSeconds(invincibilityDuration);
+        yield return new WaitForSeconds(
+            invincibilityDuration
+        );
 
         isInvincible = false;
         invincibilityRoutine = null;

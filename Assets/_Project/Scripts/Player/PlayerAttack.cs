@@ -22,7 +22,11 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private int attackDamage = 1;          // 공격력
 
 
-    public event Action<string> OnAttacked;
+    [Header("Temporary Animation")]
+    [SerializeField] private AnimationData groundAttackAnimation;
+    [SerializeField] private AnimationData airAttackAnimation;
+
+    public event Action<AnimationData> OnAttackStarted;
 
     private Coroutine attackRoutine;     // 현재 공격 코루틴
     private AttackObject currentAttackObject;       // 이번 공격에 생성한 공격 오브젝트
@@ -96,7 +100,7 @@ public class PlayerAttack : MonoBehaviour
     {
         currentPhase = AttackPhase.Startup;
 
-        OnAttacked?.Invoke("Swing_1");
+        RequestAttackAnimation();
 
         yield return new WaitForSeconds(startupTime);
 
@@ -112,6 +116,18 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSeconds(recoveryTime);
 
         FinishAttack();
+    }
+
+    private void RequestAttackAnimation()
+    {
+        AnimationData animationData = state.IsGrounded
+            ? groundAttackAnimation
+            : airAttackAnimation;
+
+        if (animationData == null)
+            return;
+
+        OnAttackStarted?.Invoke(animationData);
     }
 
     private void DisableCurrentAttackObject()

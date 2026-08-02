@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -13,24 +14,29 @@ public class PlayerHealth : MonoBehaviour
     public int MaxHealth => maxHealth;
     public bool IsDead => CurrentHealth <= 0;
 
-    #region Lifecycle
+    public event Action OnDied;
 
     private void Awake()
     {
         CurrentHealth = maxHealth;
     }
 
-    #endregion
-
     public void TakeDamage(int damage)
     {
         if (IsDead || damage <= 0)
             return;
 
-        CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+        CurrentHealth =
+            Mathf.Max(CurrentHealth - damage, 0);
 
         Debug.Log(
-            $"{name} 피격: {damage}, 남은 체력: {CurrentHealth}/{maxHealth}"
+            $"{name} 피격: {damage}, " +
+            $"남은 체력: {CurrentHealth}/{maxHealth}"
         );
+
+        if (IsDead)
+        {
+            OnDied?.Invoke();
+        }
     }
 }

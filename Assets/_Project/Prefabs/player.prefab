@@ -292,6 +292,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 150835140093219318}
+  idleAnimation: {fileID: 11400000, guid: f66bd003564a68440b2a81bccc22d291, type: 2}
+  runAnimation: {fileID: 11400000, guid: 1836d93f67d864d468ca6596e63ecc45, type: 2}
+  jumpAnimation: {fileID: 11400000, guid: e7ce5a328972e464285b933535b823fa, type: 2}
+  fallAnimation: {fileID: 11400000, guid: 9fdeb7f68de866b46967385adfd53cf6, type: 2}
+  runningVelocityThreshold: 0.01
+  landAnimation: {fileID: 11400000, guid: d6ea21ce35c54df43817fa622ddbc1bd, type: 2}
+  hitAnimation: {fileID: 11400000, guid: f111e4d142fa6b94c844d03318ae9080, type: 2}
+  deathAnimation: {fileID: 11400000, guid: d79ba65e086c63a44a3c972d5508bb20, type: 2}
 --- !u!114 &8849329026059039814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,6 +429,8 @@ MonoBehaviour:
   activeTime: 0.05
   recoveryTime: 0.28
   attackDamage: 1
+  groundAttackAnimation: {fileID: 11400000, guid: 2cae7c6f54b4f344484dc0d205706c3b, type: 2}
+  airAttackAnimation: {fileID: 11400000, guid: 768151a2062c68540a4619b9b1598f0d, type: 2}
 --- !u!114 &983486631698173050
 MonoBehaviour:
   m_ObjectHideFlags: 0
