@@ -1,42 +1,43 @@
 using UnityEngine;
+
 /// <summary>
 /// 몬스터의 공격을 담당한다.
+/// - 공격 선딜 관리
+/// - 공격 지속 시간 관리
 /// - 공격 쿨타임 관리
-/// - 공격 중 여부 관리
-/// - MonsterAI가 공격을 요청했을 때 가능한 경우에만 공격 시작
+/// - 공격 판정 생성
 /// </summary>
 public class MonsterAttack : MonoBehaviour
 {
+    private enum AttackPhase
+    {
+        None,
+        Startup,
+        Active
+    }
+
     [Header("Timing")]
-    [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] private float attackStartupDuration = 0.2f;
     [SerializeField] private float attackDuration = 0.3f;
+    [SerializeField] private float attackCooldown = 1f;
 
     [Header("Attack Object")]
     [SerializeField] private AttackObject attackPrefab;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private int attackDamage = 1;
 
-    public bool IsAttacking { get; private set; }
+    public bool IsAttacking => currentPhase != AttackPhase.None;
+    public bool IsInStartup => currentPhase == AttackPhase.Startup;
+    public bool IsActive => currentPhase == AttackPhase.Active;
 
+    private AttackPhase currentPhase;
+    private float phaseTimer;
     private float cooldownTimer;
-    private float attackTimer;
 
     private void Update()
     {
-        if (cooldownTimer > 0f)
-        {
-            cooldownTimer -= Time.deltaTime;
-        }
-
-        if (!IsAttacking)
-            return;
-
-        attackTimer -= Time.deltaTime;
-
-        if (attackTimer <= 0f)
-        {
-            EndAttack();
-        }
+        UpdateCooldown();
+        UpdateAttack();
     }
 
     public bool TryAttack()
@@ -50,9 +51,45 @@ public class MonsterAttack : MonoBehaviour
 
     private void StartAttack()
     {
-        IsAttacking = true;
-        attackTimer = attackDuration;
+        currentPhase = AttackPhase.Startup;
+        phaseTimer = attackStartupDuration;
         cooldownTimer = attackCooldown;
+    }
+
+    private void UpdateCooldown()
+    {
+        if (cooldownTimer > 0f)
+        {
+            cooldownTimer -= Time.deltaTime;
+        }
+    }
+
+    private void UpdateAttack()
+    {
+        if (!IsAttacking)
+            return;
+
+        phaseTimer -= Time.deltaTime;
+
+        if (phaseTimer > 0f)
+            return;
+
+        switch (currentPhase)
+        {
+            case AttackPhase.Startup:
+                StartActive();
+                break;
+
+            case AttackPhase.Active:
+                EndAttack();
+                break;
+        }
+    }
+
+    private void StartActive()
+    {
+        currentPhase = AttackPhase.Active;
+        phaseTimer = attackDuration;
 
         SpawnAttackObject();
     }
@@ -69,6 +106,6 @@ public class MonsterAttack : MonoBehaviour
 
     private void EndAttack()
     {
-        IsAttacking = false;
+        currentPhase = AttackPhase.None;
     }
 }
