@@ -6,7 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private PlayerPhysics physics;
+    private PlayerPhysics physics;
+    private PlayerState state;
 
     #region Move
     [Header("Move")]
@@ -54,9 +55,20 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        if (!physics.IsGrounded)
+        if (state.IsGrounded)
+        {
+            PerformJump();
             return;
+        }
 
+        if (state.TryUseAdditionalJump())
+        {
+            PerformJump();
+        }
+    }
+
+    private void PerformJump()
+    {
         physics.SetVelocityY(jumpPower);
         OnJumped?.Invoke();
     }
@@ -73,42 +85,22 @@ public class PlayerMovement : MonoBehaviour
 
     #region Facing
 
-    [Header("Facing")]
-    [SerializeField] private Transform playerRoot;
-
-    public bool IsFacingRight { get; private set; } = true;
-
     private void UpdateFacing(float inputX)
     {
         if (inputX > 0f)
-            FaceRight();
+            state.SetFacingRight(true);
+
         else if (inputX < 0f)
-            FaceLeft();
+            state.SetFacingRight(false);
     }
 
-    private void FaceRight()
+    #endregion
+
+    #region lifecycle
+    private void Awake()
     {
-        if (IsFacingRight)
-            return;
-
-        IsFacingRight = true;
-        SetRootScaleX(1f);
-    }
-
-    private void FaceLeft()
-    {
-        if (!IsFacingRight)
-            return;
-
-        IsFacingRight = false;
-        SetRootScaleX(-1f);
-    }
-
-    private void SetRootScaleX(float sign)
-    {
-        Vector3 scale = playerRoot.localScale;
-        scale.x = Mathf.Abs(scale.x) * sign;
-        playerRoot.localScale = scale;
+        physics = GetComponent<PlayerPhysics>();
+        state = GetComponent<PlayerState>();
     }
 
     #endregion

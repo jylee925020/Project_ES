@@ -6,6 +6,7 @@ public class MonsterController : MonoBehaviour
 
     private MonsterMovement movement;
     private MonsterAI ai;
+    private MonsterHealth health;
 
     private float previousDirection = 1f;
 
@@ -13,10 +14,18 @@ public class MonsterController : MonoBehaviour
     {
         movement = GetComponent<MonsterMovement>();
         ai = GetComponent<MonsterAI>();
+        health = GetComponent<MonsterHealth>();
     }
 
     private void FixedUpdate()
     {
+        if (health.IsDead)
+        {
+            movement.Stop();
+            ai.enabled = false;
+            enabled = false;
+            return;
+        }
         float direction = ai.MoveDirection;
 
         UpdateFacing(direction);

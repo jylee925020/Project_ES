@@ -1,94 +1,54 @@
 using UnityEngine;
 
 /// <summary>
-/// 플레이어의 입력을 받아 이동, 점프, 공격 등을 제어하는 클래스
+/// 플레이어의 입력과 현재 상태를 바탕으로
+/// 이동, 점프, 공격 등의 행동을 결정한다.
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private PlayerMovement movement;
-    [SerializeField] private PlayerPhysics physics;
-    [SerializeField] private PlayerAttack attack;
+    private PlayerInputReader inputReader;
+    private PlayerMovement movement;
+    private PlayerCombat combat;
+    private PlayerState state;
 
-    private float lastPressedDirection;     // 마지막으로 눌린 방향키를 저장하여 양쪽 키를 동시에 누를 때 이동 방향을 결정
+    #region Lifecycle
+
+    private void Awake()
+    {
+        inputReader = GetComponent<PlayerInputReader>();
+        movement = GetComponent<PlayerMovement>();
+        combat = GetComponent<PlayerCombat>();
+        state = GetComponent<PlayerState>();
+    }
 
     private void Update()
     {
         HandleMovement();
         HandleJump();
-        HandleAttack();
+        HandleCombat();
     }
+
+    #endregion
 
     #region Movement
 
     private void HandleMovement()
     {
-        // 왼쪽, 오른쪽 키 입력 상태를 확인
-        // 한쪽을 누른 상태에서 다른 쪽을 누르면 이미 누른 방향을 유지하고 이동만 반대로 함.
-        bool leftHeld = Input.GetKey(KeyCode.LeftArrow);
-
-        bool rightHeld = Input.GetKey(KeyCode.RightArrow);
-
-        bool leftPressed = Input.GetKeyDown(KeyCode.LeftArrow);
-
-        bool rightPressed = Input.GetKeyDown(KeyCode.RightArrow);
-
-        if (leftPressed)
+        if (!state.CanMove)
         {
-            lastPressedDirection = -1f;
-        }
+            if (state.ShouldStopHorizontalMovement)
+                movement.StopImmediately();
 
-        if (rightPressed)
-        {
-            lastPressedDirection = 1f;
-        }
-
-        float moveX = ResolveMoveInput(leftHeld, rightHeld);
-        bool bothDirectionsHeld = leftHeld && rightHeld;
-
-        // 공격 중엔 지상이라면 이동을 제한
-        if (attack.IsAttacking)
-        {
-            HandleAttackingMovement(moveX);
             return;
         }
 
-        // 양쪽 키를 동시에 누르면 이동만 나중에 누른 방향으로 하고 바라보는 방향은 유지
-        movement.Move(moveX, !bothDirectionsHeld);
-    }
+        bool canChangeFacing =
+            state.CanChangeFacing &&
+            !inputReader.BothDirectionsHeld;
 
-    // 둘다 누른 상태라면 마지막에 눌린 방향 반환.
-    // 그 외엔 왼쪽은 -1, 오른쪽은 1, 아무것도 안누르면 0 반환
-    private float ResolveMoveInput(bool leftHeld, bool rightHeld)
-    {
-        if (leftHeld && rightHeld)
-        {
-            return lastPressedDirection;
-        }
-
-        if (leftHeld)
-        {
-            return -1f;
-        }
-
-        if (rightHeld)
-        {
-            return 1f;
-        }
-
-        return 0f;
-    }
-
-    private void HandleAttackingMovement(float moveX)
-    {
-        // 지상에선 공격시 좌우 이동 멈춤
-        if (physics.IsGrounded)
-        {
-            movement.StopImmediately();
-            return;
-        }
-
-        // 공중에선 공격 중에 방향은 유지된 상태에서 좌우 이동 가능
-        movement.Move(moveX, false);
+        movement.Move(
+            inputReader.MoveDirection,
+            canChangeFacing);
     }
 
     #endregion
@@ -97,16 +57,12 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (inputReader.JumpReleased)
         {
             movement.CutJump();
         }
 
-        // 공격 중엔 점프 막힘.
-        if (attack.IsAttacking)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (inputReader.JumpPressed && state.CanJump)
         {
             movement.Jump();
         }
@@ -114,14 +70,21 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region Attack
+    #region Combat
 
-    private void HandleAttack()
+    private void HandleCombat()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            attack.Attack();
-        }
+        if (inputReader.WeaponQPressed)
+            combat.TryUseSlot(0);
+
+        if (inputReader.WeaponWPressed)
+            combat.TryUseSlot(1);
+
+        if (inputReader.WeaponEPressed)
+            combat.TryUseSlot(2);
+
+        if (inputReader.WeaponRPressed)
+            combat.TryUseSlot(3);
     }
 
     #endregion
