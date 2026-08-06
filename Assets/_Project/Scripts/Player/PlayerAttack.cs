@@ -12,7 +12,6 @@ public class PlayerAttack : MonoBehaviour
     private PlayerState state;
 
     [Header("Temporary Attack")]        // 추후 무기가 보유하게 할 데이터들. 임시로 여기서 지정함.
-    [SerializeField] private GameObject attackVFXPrefab;    // 공격 이팩트 프리팹
     [SerializeField, Min(0f)] private float startupTime = 0.12f;
     [SerializeField, Min(0f)] private float activeTime = 0.05f;
     [SerializeField, Min(0f)] private float recoveryTime = 0.28f;
@@ -31,6 +30,7 @@ public class PlayerAttack : MonoBehaviour
     private bool startedInAir;           // 공격 시작 시 공중이었는지
 
     private BoxHitBoxSpawner hitBoxSpawner;
+    [SerializeField] private VFXSpawner attackVFXSpawner;
 
 
     private enum AttackPhase
@@ -169,17 +169,9 @@ public class PlayerAttack : MonoBehaviour
     // 공격 이팩트 프리팹 생성
     private void SpawnAttackVFX()
     {
-        if (attackVFXPrefab == null)
+        if (attackVFXSpawner == null)
             return;
-
-        GameObject instance = Instantiate(
-            attackVFXPrefab,
-            transform
-        );
-
-        instance.transform.localPosition = Vector3.zero;
-        instance.transform.localRotation = Quaternion.identity;
-        instance.transform.localScale = Vector3.one;
+        attackVFXSpawner.Spawn();
     }
 
     // 액션 변경 이벤트에 호출됨

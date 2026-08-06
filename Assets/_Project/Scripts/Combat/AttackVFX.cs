@@ -22,10 +22,18 @@ public class AttackVFX : MonoBehaviour
         spriteRenderer =
             GetComponentInChildren<SpriteRenderer>(true);
 
-        if (spriteRenderer != null)
+        if (spriteRenderer == null)
         {
-            originalColor = spriteRenderer.color;
+            Debug.LogError(
+                $"{name}: SpriteRenderer가 없습니다.",
+                this
+            );
+
+            enabled = false;
+            return;
         }
+
+        originalColor = spriteRenderer.color;
     }
 
     private void Update()

@@ -9,7 +9,6 @@ using UnityEngine;
 /// </summary>
 public class MonsterAttack : MonoBehaviour
 {
-    private MonsterAI ai;
     private enum AttackPhase
     {
         None,
@@ -37,18 +36,10 @@ public class MonsterAttack : MonoBehaviour
     private float phaseTimer;
     private float cooldownTimer;
 
-    private AttackHitBox currentAttackObject;
 
     private void Awake()
     {
-        ai = GetComponent<MonsterAI>();
         hitBoxSpawner = GetComponent<BoxHitBoxSpawner>();
-        attackVFXSpawner = GetComponent<VFXSpawner>();
-
-        Debug.Log(
-            $"{name}이 사용하는 VFXSpawner: {attackVFXSpawner}",
-            attackVFXSpawner
-        );
     }
 
     private void Update()

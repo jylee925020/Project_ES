@@ -120,30 +120,6 @@ public class AttackHitBox : MonoBehaviour
         hitReceiver.ReceiveHit(hitInfo);
     }
 
-    // 자식으로 생성했을 때 쓰던 메서드. 현재 안 씀.
-    //public static AttackHitBox SpawnAsChild(
-    //    AttackHitBox prefab,
-    //    Transform attackPoint,
-    //    int damage,
-    //    AttackFaction faction)
-    //{
-    //    if (!ValidateSpawnArguments(prefab, attackPoint))
-    //        return null;
-
-    //    AttackHitBox instance = Instantiate(
-    //        prefab,
-    //        attackPoint
-    //    );
-
-    //    instance.transform.localPosition = Vector3.zero;
-    //    instance.transform.localRotation = Quaternion.identity;
-    //    instance.transform.localScale = Vector3.one;
-
-    //    instance.Initialize(damage, faction);
-
-    //    return instance;
-    //}
-
     public static AttackHitBox Spawn(
     AttackHitBox prefab,
     Vector3 worldPosition,

@@ -26,12 +26,6 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         HandleCombat();
-
-        // 공격 강제 종료 테스트
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            combat.ForceInterruptCurrentAction();
-        }
     }
 
     #endregion
