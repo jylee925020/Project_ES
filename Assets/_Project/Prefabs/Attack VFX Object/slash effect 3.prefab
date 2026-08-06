@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6166743335513788467}
-  - component: {fileID: 5614845604362338550}
-  - component: {fileID: 1366670798373687388}
+  - component: {fileID: 8514165014582296441}
   m_Layer: 9
-  m_Name: sword slash hitbox
+  m_Name: slash effect 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,53 +33,7 @@ Transform:
   - {fileID: 929932722844504184}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &5614845604362338550
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809127264511943978}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.2, y: -0.7043264}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 3.74, y: 3.03472}
-  m_EdgeRadius: 0
---- !u!114 &1366670798373687388
+--- !u!114 &8514165014582296441
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,12 +42,52 @@ MonoBehaviour:
   m_GameObject: {fileID: 1809127264511943978}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c18d266687c164c829842dfba1614d, type: 3}
+  m_Script: {fileID: 11500000, guid: b88029dc3ba95e045adda147ae2c95fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnOffset: {x: 0.5, y: 0.5}
   lifetime: 0.3
-  spriteRenderer: {fileID: 5179308723370477252}
+  alphaCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0041659046
+      value: -0.000001007691
+      inSlope: 1.8089588
+      outSlope: 1.8089588
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.36886346
+    - serializedVersion: 3
+      time: 0.24898995
+      value: 1.0043349
+      inSlope: 0.06661439
+      outSlope: 0.06661439
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.12182548
+    - serializedVersion: 3
+      time: 0.8774512
+      value: 0.21111995
+      inSlope: -1.708521
+      outSlope: -1.708521
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1
+      outSlope: -1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7253391946672824869
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +99,7 @@ GameObject:
   - component: {fileID: 929932722844504184}
   - component: {fileID: 5179308723370477252}
   m_Layer: 9
-  m_Name: effect
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,8 +114,8 @@ Transform:
   m_GameObject: {fileID: 7253391946672824869}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.16, y: -0.71, z: 0}
-  m_LocalScale: {x: 0.56060225, y: 0.38578114, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6166743335513788467}
@@ -172,7 +165,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -6939695964637348897, guid: 5d6f771c4e770834482cbc5b654b41bc, type: 3}
-  m_Color: {r: 0.073823296, g: 0, b: 0.4245283, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

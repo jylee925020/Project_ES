@@ -12,14 +12,11 @@ public class PlayerAttack : MonoBehaviour
     private PlayerState state;
 
     [Header("Temporary Attack")]        // 추후 무기가 보유하게 할 데이터들. 임시로 여기서 지정함.
-    [SerializeField] private AttackObject attackPrefab;          // 공격 프리팹
-    [SerializeField] private Transform attackSpawnPoint;    // 공격 프리팹 생성 위치 
-
+    [SerializeField] private GameObject attackVFXPrefab;    // 공격 이팩트 프리팹
     [SerializeField, Min(0f)] private float startupTime = 0.12f;
     [SerializeField, Min(0f)] private float activeTime = 0.05f;
     [SerializeField, Min(0f)] private float recoveryTime = 0.28f;
-
-    [SerializeField] private int attackDamage = 1;          // 공격력
+    [SerializeField] private int attackDamage = 1;
 
 
     [Header("Temporary Animation")]
@@ -29,9 +26,12 @@ public class PlayerAttack : MonoBehaviour
     public event Action<AnimationData> OnAttackStarted;
 
     private Coroutine attackRoutine;     // 현재 공격 코루틴
-    private AttackObject currentAttackObject;       // 이번 공격에 생성한 공격 오브젝트
+    private AttackHitBox currentHitBox;       // 이번 공격에 생성한 공격 오브젝트
 
     private bool startedInAir;           // 공격 시작 시 공중이었는지
+
+    private BoxHitBoxSpawner hitBoxSpawner;
+
 
     private enum AttackPhase
     {
@@ -48,6 +48,7 @@ public class PlayerAttack : MonoBehaviour
     private void Awake()
     {
         state = GetComponent<PlayerState>();
+        hitBoxSpawner = GetComponent<BoxHitBoxSpawner>();
     }
     private void OnEnable()
     {
@@ -109,7 +110,7 @@ public class PlayerAttack : MonoBehaviour
 
         yield return new WaitForSeconds(activeTime);
 
-        DisableCurrentAttackObject();
+        DisableCurrentHitBox();
 
         currentPhase = AttackPhase.Recovery;
 
@@ -130,19 +131,19 @@ public class PlayerAttack : MonoBehaviour
         OnAttackStarted?.Invoke(animationData);
     }
 
-    private void DisableCurrentAttackObject()
+    private void DisableCurrentHitBox()
     {
-        if (currentAttackObject == null)
+        if (currentHitBox == null)
             return;
 
-        currentAttackObject.DisableDamage();
-        currentAttackObject = null;
+        currentHitBox.DisableDamage();
+        currentHitBox = null;
     }
 
     // 공격 종료. 변수 초기화.
     private void FinishAttack()
     {
-        DisableCurrentAttackObject();
+        DisableCurrentHitBox();
 
         state.EndAction(PlayerActionType.Attack);
 
@@ -152,15 +153,33 @@ public class PlayerAttack : MonoBehaviour
     }
 
 
-    // 공격 프리팹 생성 (추후 무기별로 다른 공격 프리팹을 생성하도록 수정할 예정)
     private void SpawnAttack()
     {
-        currentAttackObject = AttackObject.SpawnAsChild(
-            attackPrefab,
-            attackSpawnPoint,
-            attackDamage,
-            AttackFaction.Player
+        if (hitBoxSpawner != null)
+        {
+            currentHitBox = hitBoxSpawner.Spawn(
+                attackDamage,
+                AttackFaction.Player
+            );
+        }
+
+        SpawnAttackVFX();
+    }
+
+    // 공격 이팩트 프리팹 생성
+    private void SpawnAttackVFX()
+    {
+        if (attackVFXPrefab == null)
+            return;
+
+        GameObject instance = Instantiate(
+            attackVFXPrefab,
+            transform
         );
+
+        instance.transform.localPosition = Vector3.zero;
+        instance.transform.localRotation = Quaternion.identity;
+        instance.transform.localScale = Vector3.one;
     }
 
     // 액션 변경 이벤트에 호출됨
@@ -199,4 +218,5 @@ public class PlayerAttack : MonoBehaviour
 
         attackRoutine = StartCoroutine(AttackRoutine());
     }
+
 }

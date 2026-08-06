@@ -9,6 +9,7 @@ using UnityEngine;
 /// </summary>
 public class MonsterAttack : MonoBehaviour
 {
+    private MonsterAI ai;
     private enum AttackPhase
     {
         None,
@@ -21,9 +22,11 @@ public class MonsterAttack : MonoBehaviour
     [SerializeField] private float attackDuration = 0.3f;
     [SerializeField] private float attackCooldown = 1f;
 
-    [Header("Attack Object")]
-    [SerializeField] private AttackObject attackPrefab;
-    [SerializeField] private Transform attackPoint;
+    private BoxHitBoxSpawner hitBoxSpawner;
+    private AttackHitBox currentHitBox;
+
+    [SerializeField] private VFXSpawner attackVFXSpawner;
+
     [SerializeField] private int attackDamage = 1;
 
     public bool IsAttacking => currentPhase != AttackPhase.None;
@@ -33,6 +36,20 @@ public class MonsterAttack : MonoBehaviour
     private AttackPhase currentPhase;
     private float phaseTimer;
     private float cooldownTimer;
+
+    private AttackHitBox currentAttackObject;
+
+    private void Awake()
+    {
+        ai = GetComponent<MonsterAI>();
+        hitBoxSpawner = GetComponent<BoxHitBoxSpawner>();
+        attackVFXSpawner = GetComponent<VFXSpawner>();
+
+        Debug.Log(
+            $"{name}이 사용하는 VFXSpawner: {attackVFXSpawner}",
+            attackVFXSpawner
+        );
+    }
 
     private void Update()
     {
@@ -92,13 +109,21 @@ public class MonsterAttack : MonoBehaviour
         phaseTimer = attackDuration;
 
         SpawnAttackObject();
+        SpawnAttackVFX();
     }
+    private void SpawnAttackVFX()
+    {
+        if (attackVFXSpawner == null)
+            return;
 
+        attackVFXSpawner.Spawn();
+    }
     private void SpawnAttackObject()
     {
-        AttackObject.SpawnAsChild(
-            attackPrefab,
-            attackPoint,
+        if (hitBoxSpawner == null)
+            return;
+
+        currentHitBox = hitBoxSpawner.Spawn(
             attackDamage,
             AttackFaction.Monster
         );
@@ -106,6 +131,17 @@ public class MonsterAttack : MonoBehaviour
 
     private void EndAttack()
     {
+        DisableCurrentHitBox();
         currentPhase = AttackPhase.None;
     }
+
+    private void DisableCurrentHitBox()
+    {
+        if (currentHitBox == null)
+            return;
+
+        currentHitBox.DisableDamage();
+        currentHitBox = null;
+    }
+
 }
