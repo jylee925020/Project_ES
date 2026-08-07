@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 [ExecuteAlways]
-public class VFXSpawner : MonoBehaviour
+public class SimpleVFXSpawner : MonoBehaviour
 {
     #region Inspector
 
@@ -319,10 +319,10 @@ public class VFXSpawner : MonoBehaviour
 
     private void ApplyTint(GameObject target)
     {
-        AttackVFX[] vfxComponents =
-            target.GetComponentsInChildren<AttackVFX>(true);
+        SpriteFadeVFX[] vfxComponents =
+            target.GetComponentsInChildren<SpriteFadeVFX>(true);
 
-        foreach (AttackVFX vfx in vfxComponents)
+        foreach (SpriteFadeVFX vfx in vfxComponents)
         {
             SpriteRenderer renderer =
                 vfx.GetComponentInChildren<SpriteRenderer>(true);
@@ -345,8 +345,8 @@ public class VFXSpawner : MonoBehaviour
 
         foreach (SpriteRenderer renderer in renderers)
         {
-            AttackVFX owner =
-                renderer.GetComponentInParent<AttackVFX>();
+            SpriteFadeVFX owner =
+                renderer.GetComponentInParent<SpriteFadeVFX>();
 
             if (owner != null)
                 continue;

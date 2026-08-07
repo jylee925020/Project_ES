@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3175293791803986956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8724302197477677976}
+  - component: {fileID: 4192198844227016542}
+  - component: {fileID: 6313243150631168386}
+  - component: {fileID: 1839173260396459167}
+  - component: {fileID: 4384805445791731378}
+  - component: {fileID: 1495199375711464162}
+  m_Layer: 7
+  m_Name: Weapon Double Sword
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8724302197477677976
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3175293791803986956}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4192198844227016542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3175293791803986956}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 192ee40dba39c7545b30f688874657f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackExecutor: {fileID: 6313243150631168386}
+  groundAttackAnimation: {fileID: 11400000, guid: 2cae7c6f54b4f344484dc0d205706c3b, type: 2}
+  airAttackAnimation: {fileID: 11400000, guid: 768151a2062c68540a4619b9b1598f0d, type: 2}
+--- !u!114 &6313243150631168386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3175293791803986956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efd50cc5d3564ee4194922bda492841a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstStartupTime: 0.12
+  firstActiveTime: 0.05
+  intervalTime: 0.1
+  secondActiveTime: 0.05
+  recoveryTime: 0.28
+  damage: 1
+  firstHitBoxSpawner: {fileID: 1495199375711464162}
+  secondHitBoxSpawner: {fileID: 1495199375711464162}
+  firstVFXSpawner: {fileID: 1839173260396459167}
+  secondVFXSpawner: {fileID: 4384805445791731378}
+--- !u!114 &1839173260396459167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3175293791803986956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ab05cc00d10744f851bde3a7a4d2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vfxPrefab: {fileID: 1809127264511943978, guid: 8af3cce99ba27bc409a2543d529695da, type: 3}
+  localPosition: {x: 0.44, y: -0.28}
+  localAngle: -4.8
+  localScale: {x: 0.69, y: 0.39}
+  tint: {r: 1, g: 0, b: 0, a: 1}
+  spawnAsChild: 1
+  showPreview: 1
+--- !u!114 &4384805445791731378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3175293791803986956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ab05cc00d10744f851bde3a7a4d2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vfxPrefab: {fileID: 1809127264511943978, guid: 8af3cce99ba27bc409a2543d529695da, type: 3}
+  localPosition: {x: 0.1, y: 0.92}
+  localAngle: 33.48
+  localScale: {x: 0.64, y: -0.7}
+  tint: {r: 0.7169812, g: 0, b: 0.24152274, a: 1}
+  spawnAsChild: 1
+  showPreview: 1
+--- !u!114 &1495199375711464162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3175293791803986956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1af19ff06f15dc344bd2bbfab5daac2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitBoxPrefab: {fileID: 1366670798373687388, guid: 85ad96f906fbaa2429ed3988ebc68981, type: 3}
+  localPosition: {x: 0.55, y: -0.21}
+  size: {x: 3.8, y: 2.72}
+  localAngle: 0
+  showPreview: 0
+  previewColor: {r: 0, g: 0.07514191, b: 1, a: 0.8}

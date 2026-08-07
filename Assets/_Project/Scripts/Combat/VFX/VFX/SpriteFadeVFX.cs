@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 일회성 공격 이펙트의 수명과 투명도를 관리한다.
 /// </summary>
-public class AttackVFX : MonoBehaviour
+public class SpriteFadeVFX : MonoBehaviour
 {
     [Header("Lifetime")]
     [SerializeField] private float lifetime = 0.3f;

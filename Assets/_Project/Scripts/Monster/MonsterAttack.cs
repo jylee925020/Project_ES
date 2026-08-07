@@ -24,7 +24,7 @@ public class MonsterAttack : MonoBehaviour
     private BoxHitBoxSpawner hitBoxSpawner;
     private AttackHitBox currentHitBox;
 
-    [SerializeField] private VFXSpawner attackVFXSpawner;
+    [SerializeField] private SimpleVFXSpawner attackVFXSpawner;
 
     [SerializeField] private int attackDamage = 1;
 

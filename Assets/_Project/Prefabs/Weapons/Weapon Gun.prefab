@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4133818241455576570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5374326081612764959}
+  - component: {fileID: 188645338398192835}
+  - component: {fileID: 7943586211543906021}
+  - component: {fileID: 9129269206734747904}
+  - component: {fileID: 8837081172468378606}
+  - component: {fileID: 2011030384501406014}
+  m_Layer: 7
+  m_Name: Weapon Gun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5374326081612764959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133818241455576570}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &188645338398192835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133818241455576570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df09e19894865344a9395e0d440deda1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 10
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  localOffset: {x: 0, y: 0.27}
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &7943586211543906021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133818241455576570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d54154983fccbe40a0f43f1c4c6dbc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startupTime: 0.1
+  recoveryTime: 0.2
+  damage: 1
+  rayHitBoxSpawner: {fileID: 188645338398192835}
+  muzzleVFXSpawner: {fileID: 9129269206734747904}
+  bulletTrailSpawner: {fileID: 8837081172468378606}
+--- !u!114 &9129269206734747904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133818241455576570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ab05cc00d10744f851bde3a7a4d2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vfxPrefab: {fileID: 1809127264511943978, guid: f2f87e622c6e0cd4cb2b39b69e5b8edb, type: 3}
+  localPosition: {x: 1.04, y: 0.27}
+  localAngle: 0
+  localScale: {x: 0.2, y: 0.2}
+  tint: {r: 1, g: 1, b: 1, a: 1}
+  spawnAsChild: 1
+  showPreview: 0
+--- !u!114 &8837081172468378606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133818241455576570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7ad8c53ecc289641b98217d91d1d732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trailPrefab: {fileID: 2021590956128377991, guid: 7d4c40cdd6b81064cbed409e2219b594, type: 3}
+  color: {r: 1, g: 0.981875, b: 0, a: 1}
+  thickness: 0.05
+  lifetime: 0.3
+--- !u!114 &2011030384501406014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133818241455576570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d75f8ce0927e1964480d207034c3066f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackExecutor: {fileID: 7943586211543906021}
+  groundAttackAnimation: {fileID: 11400000, guid: 301bf66557fe52242ae05c30c7becbf5, type: 2}
+  airAttackAnimation: {fileID: 11400000, guid: 47f4f086366d3be4a8e7c203dc3098dc, type: 2}

@@ -30,8 +30,9 @@ public class PlayerAnimation : MonoBehaviour
     private PlayerHealth health;
     private PlayerHitReceiver hitReceiver;
     private PlayerPhysics physics;
-    private PlayerAttack attack;
+    private Weapon attack;
     private PlayerState state;
+    private PlayerCombat combat;
 
     private AnimationData currentBaseAnimation;
     private AnimationData currentSpecialAnimation;
@@ -47,26 +48,26 @@ public class PlayerAnimation : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         hitReceiver = GetComponent<PlayerHitReceiver>();
         physics = GetComponent<PlayerPhysics>();
-        attack = GetComponent<PlayerAttack>();
         state = GetComponent<PlayerState>();
+        combat = GetComponent<PlayerCombat>();
     }
 
     private void OnEnable()
     {
-        attack.OnAttackStarted += RequestSpecialAnimation;
         state.OnActionChanged += HandleActionChanged;
         state.OnLanded += PlayLandAnimation;
         hitReceiver.OnHit += PlayHitAnimation;
         health.OnDied += PlayDeathAnimation;
+        combat.OnAttackStarted += RequestSpecialAnimation;
     }
 
     private void OnDisable()
     {
-        attack.OnAttackStarted -= RequestSpecialAnimation;
         state.OnActionChanged -= HandleActionChanged;
         state.OnLanded -= PlayLandAnimation;
         hitReceiver.OnHit -= PlayHitAnimation;
         health.OnDied -= PlayDeathAnimation;
+        combat.OnAttackStarted -= RequestSpecialAnimation;
     }
 
     private void Update()
