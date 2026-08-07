@@ -209,15 +209,19 @@ public class VFXSpawner : MonoBehaviour
             return;
 
 #if UNITY_EDITOR
+        // Project 창의 Prefab Asset 자체에는 Preview를 생성할 수 없다.
+        if (EditorUtility.IsPersistent(gameObject))
+            return;
+
         previewInstance = PrefabUtility.InstantiatePrefab(
             vfxPrefab,
             transform
         ) as GameObject;
 #else
-        previewInstance = Instantiate(
-            vfxPrefab,
-            transform
-        );
+    previewInstance = Instantiate(
+        vfxPrefab,
+        transform
+    );
 #endif
 
         if (previewInstance == null)

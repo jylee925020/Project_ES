@@ -48,13 +48,34 @@ public class MonsterAttack : MonoBehaviour
         UpdateAttack();
     }
 
+    private bool attackEnabled = true;
+
+    public void SetAttackEnabled(bool enabled)
+    {
+        attackEnabled = enabled;
+
+        if (!enabled)
+            CancelAttack();
+    }
+
     public bool TryAttack()
     {
+        if (!attackEnabled)
+            return false;
+
         if (IsAttacking || cooldownTimer > 0f)
             return false;
 
         StartAttack();
         return true;
+    }
+
+    private void CancelAttack()
+    {
+        DisableCurrentHitBox();
+
+        currentPhase = AttackPhase.None;
+        phaseTimer = 0f;
     }
 
     private void StartAttack()

@@ -18,8 +18,7 @@ public class MonsterAI : MonoBehaviour
         Attack
     }
 
-    [Header("Target")]
-    [SerializeField] private Transform target;
+    private Transform target;
 
     [Header("Player Detection")]
     [SerializeField] private float detectionRange = 5f;
@@ -52,6 +51,15 @@ public class MonsterAI : MonoBehaviour
     private void Awake()
     {
         monsterAttack = GetComponent<MonsterAttack>();
+    }
+
+    // 플레이어의 ObjectManager 등록보다 늦어야 하므로 Start에서 플레이어를 가져온다.
+    private void Start()
+    {
+        Player player = ObjectManager.Instance.Player;
+
+        if (player != null)
+            target = player.transform;
     }
 
 

@@ -188,6 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4675087659028342909}
+  - component: {fileID: 3612131048498051892}
   - component: {fileID: 6504587801508926852}
   - component: {fileID: 150835140093219318}
   - component: {fileID: 4551536752873293882}
@@ -231,6 +232,18 @@ Transform:
   - {fileID: 7733035511568952703}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3612131048498051892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438221091232981000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a70b1d8a33a90884eb4243d919e10758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &6504587801508926852
 Rigidbody2D:
   serializedVersion: 5
@@ -292,7 +305,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4392dc997a241924db9b6788b3d4adad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 6504587801508926852}
 --- !u!114 &7863515242094586444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,13 +477,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 192ee40dba39c7545b30f688874657f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackVFXPrefab: {fileID: 1809127264511943978, guid: 757ea81ee6a3c29428bae4684e54101c, type: 3}
   startupTime: 0.12
   activeTime: 0.05
   recoveryTime: 0.28
   attackDamage: 1
   groundAttackAnimation: {fileID: 11400000, guid: 2cae7c6f54b4f344484dc0d205706c3b, type: 2}
   airAttackAnimation: {fileID: 11400000, guid: 768151a2062c68540a4619b9b1598f0d, type: 2}
+  attackVFXSpawner: {fileID: 4108047416611343634}
 --- !u!114 &3771855645785891096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,7 +500,7 @@ MonoBehaviour:
   localPosition: {x: 0.55, y: -0.21}
   size: {x: 3.8, y: 2.72}
   localAngle: 0
-  showPreview: 1
+  showPreview: 0
   previewColor: {r: 0, g: 0.07514191, b: 1, a: 0.8}
 --- !u!114 &4108047416611343634
 MonoBehaviour:
@@ -508,7 +520,7 @@ MonoBehaviour:
   localScale: {x: 0.5606, y: 0.3858}
   tint: {r: 0.07450981, g: 0, b: 0.42352942, a: 1}
   spawnAsChild: 1
-  showPreview: 1
+  showPreview: 0
 --- !u!1 &8626422542498898155
 GameObject:
   m_ObjectHideFlags: 0

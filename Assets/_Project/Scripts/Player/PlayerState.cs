@@ -95,6 +95,7 @@ public class PlayerState : MonoBehaviour
     #endregion
 
 
+
     #region Action
 
     public event Action<PlayerActionType> OnActionChanged;
@@ -137,6 +138,15 @@ public class PlayerState : MonoBehaviour
             return;
 
         CurrentAction = PlayerActionType.Dead;
+        OnActionChanged?.Invoke(CurrentAction);
+    }
+
+    public void Revive()
+    {
+        if (!IsDead)
+            return;
+
+        CurrentAction = PlayerActionType.None;
         OnActionChanged?.Invoke(CurrentAction);
     }
 

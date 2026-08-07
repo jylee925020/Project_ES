@@ -52,5 +52,10 @@ public class PlayerPhysics : MonoBehaviour
         SetVelocityX(newVelocityX);
     }
 
+    public void Stop()
+    {
+        SetVelocity(Vector2.zero);
+    }
+
     #endregion
 }

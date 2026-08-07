@@ -314,7 +314,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3243ce11b92708b42bc9d9abef4043f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   detectionRange: 5
   attackRange: 2
   patrolEnabled: 0
@@ -410,7 +409,7 @@ MonoBehaviour:
   localPosition: {x: 0.93, y: 0.86}
   size: {x: 2.65, y: 3.43}
   localAngle: 0
-  showPreview: 1
+  showPreview: 0
   previewColor: {r: 1, g: 0, b: 0, a: 0.8}
 --- !u!114 &7606922668972744410
 MonoBehaviour:
@@ -430,4 +429,4 @@ MonoBehaviour:
   localScale: {x: -0.4, y: 0.49}
   tint: {r: 0.73333335, g: 0, b: 0.8509804, a: 1}
   spawnAsChild: 1
-  showPreview: 1
+  showPreview: 0

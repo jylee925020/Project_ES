@@ -15,6 +15,7 @@ public class PlayerHealth : MonoBehaviour
     public bool IsDead => CurrentHealth <= 0;
 
     public event Action OnDied;
+    public event Action<int, int> OnHealthChanged;
 
     private void Awake()
     {
@@ -29,6 +30,8 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth =
             Mathf.Max(CurrentHealth - damage, 0);
 
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+
         Debug.Log(
             $"{name} 피격: {damage}, " +
             $"남은 체력: {CurrentHealth}/{maxHealth}"
@@ -38,5 +41,10 @@ public class PlayerHealth : MonoBehaviour
         {
             OnDied?.Invoke();
         }
+    }
+
+    public void RestoreFullHealth()
+    {
+        CurrentHealth = maxHealth;
     }
 }
