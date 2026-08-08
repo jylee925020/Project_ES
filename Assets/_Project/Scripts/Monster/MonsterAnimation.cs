@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(MonsterAI))]
@@ -56,7 +57,6 @@ public class MonsterAnimation : MonoBehaviour
 
         animator.SetTrigger(HitHash);
     }
-
     private void PlayDeath()
     {
         if (deathPlayed)
@@ -67,13 +67,13 @@ public class MonsterAnimation : MonoBehaviour
         animator.SetBool(IsMovingHash, false);
         animator.SetBool(IsAttackStartupHash, false);
         animator.SetBool(IsAttackingHash, false);
-
+        animator.ResetTrigger(HitHash);
         animator.SetTrigger(DieHash);
     }
 
-    // Die 클립 마지막 프레임의 Animation Event에서 호출
     public void DisableMonster()
     {
+        Debug.Log($"{name}: DisableMonster");
         gameObject.SetActive(false);
     }
 }

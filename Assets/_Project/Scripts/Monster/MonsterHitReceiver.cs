@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 /// <summary>
 /// 몬스터가 외부 공격을 받는 진입점.
@@ -9,12 +10,14 @@ using UnityEngine;
 public class MonsterHitReceiver : MonoBehaviour, IHitReceiver
 {
     private MonsterHealth health;
-    private MonsterAnimation animation;
+    private MonsterAnimation monsterAnimation;
+
+    public event Action<HitInfo> OnHit;
 
     private void Awake()
     {
         health = GetComponent<MonsterHealth>();
-        animation = GetComponent<MonsterAnimation>();
+        monsterAnimation = GetComponent<MonsterAnimation>();
     }
 
     public void ReceiveHit(HitInfo hitInfo)
@@ -22,11 +25,16 @@ public class MonsterHitReceiver : MonoBehaviour, IHitReceiver
         if (hitInfo.Faction != AttackFaction.Player)
             return;
 
+        if (health.IsDead)
+            return;
+
         health.TakeDamage(hitInfo.Damage);
 
         if (!health.IsDead)
         {
-            animation.PlayHit();
+            monsterAnimation.PlayHit();
         }
+
+        OnHit?.Invoke(hitInfo);
     }
 }

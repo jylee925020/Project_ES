@@ -27,10 +27,7 @@ public class PlayerHealth : MonoBehaviour
         if (IsDead || damage <= 0)
             return;
 
-        CurrentHealth =
-            Mathf.Max(CurrentHealth - damage, 0);
-
-        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        SetHealth(CurrentHealth - damage, maxHealth);
 
         Debug.Log(
             $"{name} 피격: {damage}, " +
@@ -45,6 +42,14 @@ public class PlayerHealth : MonoBehaviour
 
     public void RestoreFullHealth()
     {
-        CurrentHealth = maxHealth;
+        SetHealth(maxHealth, maxHealth);
+    }
+
+    private void SetHealth(int currentHealth, int maxHealth)
+    {
+        this.maxHealth = Mathf.Max(maxHealth, 1);
+        CurrentHealth = Mathf.Clamp(currentHealth, 0, this.maxHealth);
+
+        OnHealthChanged?.Invoke(CurrentHealth, this.maxHealth);
     }
 }

@@ -96,7 +96,10 @@ public class PlayerCombat : MonoBehaviour
 
     private void HandleActionChanged(PlayerActionType action)
     {
-        if (action == PlayerActionType.Dead)
+        if (action == PlayerActionType.HitStun ||
+            action == PlayerActionType.Dead)
+        {
             ForceInterruptCurrentAction();
+        }
     }
 }

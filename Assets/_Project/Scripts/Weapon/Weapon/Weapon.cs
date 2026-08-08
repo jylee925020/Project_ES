@@ -15,7 +15,6 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] private AnimationData groundAttackAnimation;
     [SerializeField] private AnimationData airAttackAnimation;
 
-    public event Action<AnimationData> OnAttackStarted;
     public AnimationData GetAttackAnimation(bool isGrounded)
     {
         return isGrounded

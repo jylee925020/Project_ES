@@ -21,7 +21,7 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
     private bool isInvincible;
     private Coroutine invincibilityRoutine;
 
-    public event Action OnHit;
+    public event Action<HitInfo> OnHit;
     public event Action OnInvincibilityStarted;
     public event Action OnInvincibilityEnded;
 
@@ -41,6 +41,8 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
             return;
 
         health.TakeDamage(hitInfo.Damage);
+        OnHit?.Invoke(hitInfo);
+
         hitReaction.ApplyKnockback();
 
         if (health.IsDead)
@@ -51,8 +53,6 @@ public class PlayerHitReceiver : MonoBehaviour, IHitReceiver
 
         hitReaction.ApplyHitStun();
         BeginInvincibility();
-
-        OnHit?.Invoke();
     }
 
     private void BeginInvincibility()

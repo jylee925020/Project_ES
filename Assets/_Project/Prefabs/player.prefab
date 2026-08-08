@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 7818427772337598018}
   - component: {fileID: 6323005488364743298}
   - component: {fileID: 7639283283025640474}
+  - component: {fileID: 972850020350342512}
   m_Layer: 7
   m_Name: player
   m_TagString: Untagged
@@ -533,6 +534,22 @@ MonoBehaviour:
   deceleration: 80
   jumpPower: 12
   jumpCutRate: 0.3
+--- !u!114 &972850020350342512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438221091232981000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01f778c13be37174887a9c4d770224ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageTextPrefab: {fileID: 3153599308555654544, guid: e830e94d3986f044b83bba2798288905, type: 3}
+  spawnOffset: {x: 0, y: 1, z: 0}
+  showPreview: 0
+  previewDamage: 1
 --- !u!1 &7230021718512902986
 GameObject:
   m_ObjectHideFlags: 0

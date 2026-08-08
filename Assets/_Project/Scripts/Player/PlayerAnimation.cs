@@ -224,7 +224,7 @@ public class PlayerAnimation : MonoBehaviour
         RequestSpecialAnimation(landAnimation);
     }
 
-    private void PlayHitAnimation()
+    private void PlayHitAnimation(HitInfo hitInfo)
     {
         RequestSpecialAnimation(hitAnimation);
     }

@@ -170,6 +170,7 @@ GameObject:
   - component: {fileID: 9006914557563822419}
   - component: {fileID: 1629901956764591883}
   - component: {fileID: 7606922668972744410}
+  - component: {fileID: 8962022756314991446}
   m_Layer: 8
   m_Name: Slime_tmp
   m_TagString: Untagged
@@ -430,3 +431,19 @@ MonoBehaviour:
   tint: {r: 0.73333335, g: 0, b: 0.8509804, a: 1}
   spawnAsChild: 1
   showPreview: 0
+--- !u!114 &8962022756314991446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6628757416873632280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01f778c13be37174887a9c4d770224ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageTextPrefab: {fileID: 3153599308555654544, guid: e830e94d3986f044b83bba2798288905, type: 3}
+  spawnOffset: {x: 0, y: 1.2, z: 0}
+  showPreview: 0
+  previewDamage: 10
