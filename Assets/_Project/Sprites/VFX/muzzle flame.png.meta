@@ -184,7 +184,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      muzzle flame_0: -8881560465611480913
+      muzzle flame_1: 7248312335998626414
+      muzzle flame_2: 1257386011270211751
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
