@@ -620,6 +620,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5543701316577626653}
     m_Modifications:
+    - target: {fileID: 188645338398192835, guid: ce291922ea943e34483179a5c73ef29c, type: 3}
+      propertyPath: gizmoColor.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4133818241455576570, guid: ce291922ea943e34483179a5c73ef29c, type: 3}
       propertyPath: m_Name
       value: Weapon Gun
@@ -693,9 +697,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5543701316577626653}
     m_Modifications:
+    - target: {fileID: 1839173260396459167, guid: fade2e2c97bc655469dbc763870362aa, type: 3}
+      propertyPath: showPreview
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3175293791803986956, guid: fade2e2c97bc655469dbc763870362aa, type: 3}
       propertyPath: m_Name
       value: Weapon Double Sword
+      objectReference: {fileID: 0}
+    - target: {fileID: 4384805445791731378, guid: fade2e2c97bc655469dbc763870362aa, type: 3}
+      propertyPath: showPreview
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8724302197477677976, guid: fade2e2c97bc655469dbc763870362aa, type: 3}
       propertyPath: m_LocalPosition.x
