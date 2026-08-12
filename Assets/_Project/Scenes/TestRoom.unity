@@ -119,6 +119,61 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &68087122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 68087124}
+  - component: {fileID: 68087123}
+  m_Layer: 0
+  m_Name: building mesh backgorund generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &68087123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68087122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e1a99708ef652242868975aa84ad492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerPrefab: {fileID: 8983284418448003790, guid: 5957510a0e1411e4d8d77111cc011e29, type: 3}
+  layerCount: 20
+  referenceDistance: 10
+  firstLayerDistance: 40
+  layerDistanceInterval: 10
+  horizonY: 2
+  baseHorizontalRange: 200
+  baseBuildingCount: 10
+  cameraTransform: {fileID: 519420032}
+  nearFogAmount: 0.2
+  farFogAmount: 0.8
+--- !u!4 &68087124
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68087122}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &125170069
 GameObject:
   m_ObjectHideFlags: 0
@@ -1537,7 +1592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &905264689
 Transform:
   m_ObjectHideFlags: 0
@@ -1566,12 +1621,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layerPrefab: {fileID: 7241225307995054052, guid: 175846222698d6a48a5e6085aca5224b, type: 3}
-  layerCount: 10
+  layerCount: 20
   referenceDistance: 10
-  firstLayerDistance: 20
+  firstLayerDistance: 40
   layerDistanceInterval: 10
   baseHorizontalRange: 200
-  baseBuildingCount: 10
+  baseBuildingCount: 12
   cameraTransform: {fileID: 519420032}
 --- !u!1 &908634806
 GameObject:
@@ -2101,7 +2156,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1094721834
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4013,18 +4068,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1067660890365422584, guid: 0bad8ae8cb29fd14ab60ec16069faa80, type: 3}
-      propertyPath: showPreview
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3138706473396228565, guid: 0bad8ae8cb29fd14ab60ec16069faa80, type: 3}
-      propertyPath: showPreview
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3355699561206361506, guid: 0bad8ae8cb29fd14ab60ec16069faa80, type: 3}
-      propertyPath: gizmoColor.a
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4675087659028342909, guid: 0bad8ae8cb29fd14ab60ec16069faa80, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.41
@@ -4065,10 +4108,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5962283145053364321, guid: 0bad8ae8cb29fd14ab60ec16069faa80, type: 3}
-      propertyPath: showPreview
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6438221091232981000, guid: 0bad8ae8cb29fd14ab60ec16069faa80, type: 3}
       propertyPath: m_Name
       value: player
@@ -4089,3 +4128,4 @@ SceneRoots:
   - {fileID: 898442014}
   - {fileID: 642925418}
   - {fileID: 1217875312}
+  - {fileID: 68087124}

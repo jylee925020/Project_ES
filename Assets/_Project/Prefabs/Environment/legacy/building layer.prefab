@@ -47,9 +47,9 @@ MonoBehaviour:
   rectanglePrefab: {fileID: 3913575473817927994, guid: 3371e1612ff5a32499fbbef40d82ac34, type: 3}
   count: 20
   horizontalRange: 100
-  widthRange: {x: 2, y: 5}
-  heightRange: {x: 20, y: 40}
+  widthRange: {x: 4, y: 15}
+  heightRange: {x: 20, y: 80}
   minBrightness: 131
   maxBrightness: 208
   groundPrefab: {fileID: 3913575473817927994, guid: 3371e1612ff5a32499fbbef40d82ac34, type: 3}
-  groundHeight: 5
+  groundHeight: 10
