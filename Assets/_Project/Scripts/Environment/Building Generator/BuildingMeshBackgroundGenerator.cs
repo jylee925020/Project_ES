@@ -13,7 +13,8 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
     [SerializeField] private float layerDistanceInterval = 10f;
 
     [Header("Perspective")]
-    [SerializeField] private float horizonY = 0f;
+    [SerializeField] private float baseY = -20f;
+    [SerializeField] private float horizonY = -10f;
 
     [Header("Base Generation")]
     [SerializeField] private float baseHorizontalRange = 50f;
@@ -26,17 +27,20 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float nearFogAmount = 0f;
     [SerializeField, Range(0f, 1f)] private float farFogAmount = 0.8f;
 
+    [Header("Gizmo")]
+    [SerializeField] private float gizmoWidth = 40f;
+
     private readonly List<Transform> layerTransforms = new();
     private readonly List<Vector3> initialLayerPositions = new();
     private readonly List<float> perspectiveScales = new();
+    private readonly List<float> layerDistances = new();
 
     private Vector3 initialCameraPosition;
 
     private void Awake()
     {
-        initialCameraPosition = cameraTransform.position;
-
         GenerateLayers();
+        ResetParallax();
     }
 
     private void LateUpdate()
@@ -46,10 +50,11 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
 
         for (int i = 0; i < layerTransforms.Count; i++)
         {
-            float perspectiveScale = perspectiveScales[i];
-            float followFactor = 1f - perspectiveScale;
+            float followFactor =
+                1f - perspectiveScales[i];
 
-            Vector3 origin = initialLayerPositions[i];
+            Vector3 origin =
+                initialLayerPositions[i];
 
             layerTransforms[i].position = new Vector3(
                 origin.x + cameraDelta.x * followFactor,
@@ -57,6 +62,12 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
                 origin.z
             );
         }
+
+        // 리셋 테스트
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    ResetParallax();
+        //}
     }
 
     private void GenerateLayers()
@@ -65,7 +76,8 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
         for (int i = layerCount - 1; i >= 0; i--)
         {
             float distance =
-                firstLayerDistance + layerDistanceInterval * i;
+                firstLayerDistance
+                + layerDistanceInterval * i;
 
             float perspectiveScale =
                 referenceDistance / distance;
@@ -77,7 +89,9 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
                 baseHorizontalRange * generationRatio;
 
             int buildingCount =
-                Mathf.RoundToInt(baseBuildingCount * generationRatio);
+                Mathf.RoundToInt(
+                    baseBuildingCount * generationRatio
+                );
 
             BuildingMeshLayerGenerator layer = Instantiate(
                 layerPrefab,
@@ -86,37 +100,107 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
                 transform
             );
 
-            layer.Configure(buildingCount, horizontalRange);
-            layer.SetSortingOrder(-i);
-
-            Transform layerTransform = layer.transform;
-
-            layerTransform.localScale *= perspectiveScale;
-
-            float baseY = transform.position.y;
-
-            float perspectiveY =
-                horizonY
-                + (baseY - horizonY) * perspectiveScale;
-
-            layerTransform.position = new Vector3(
-                layerTransform.position.x,
-                perspectiveY,
-                layerTransform.position.z
+            layer.Configure(
+                buildingCount,
+                horizontalRange
             );
 
+            layer.SetSortingOrder(-i);
+
+            Transform layerTransform =
+                layer.transform;
+
+            layerTransform.localScale *=
+                perspectiveScale;
+
             layerTransforms.Add(layerTransform);
-            initialLayerPositions.Add(layerTransform.position);
             perspectiveScales.Add(perspectiveScale);
+            layerDistances.Add(distance);
 
             float fogT = layerCount <= 1
                 ? 0f
                 : (float)i / (layerCount - 1);
 
             float fogAmount =
-                Mathf.Lerp(nearFogAmount, farFogAmount, fogT);
+                Mathf.Lerp(
+                    nearFogAmount,
+                    farFogAmount,
+                    fogT
+                );
 
             layer.SetFogAmount(fogAmount);
         }
+    }
+
+    public void ResetParallax()
+    {
+        initialCameraPosition =
+            cameraTransform.position;
+
+        initialLayerPositions.Clear();
+
+        for (int i = 0; i < layerTransforms.Count; i++)
+        {
+            float distance =
+                layerDistances[i];
+
+            float depthScale =
+                firstLayerDistance / distance;
+
+            float relativeY =
+                horizonY
+                + (baseY - horizonY) * depthScale;
+
+            Vector3 position = new Vector3(
+                cameraTransform.position.x,
+                cameraTransform.position.y + relativeY,
+                layerTransforms[i].position.z
+            );
+
+            layerTransforms[i].position = position;
+            initialLayerPositions.Add(position);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (cameraTransform == null)
+            return;
+
+        float centerX =
+            cameraTransform.position.x;
+
+        float cameraY =
+            cameraTransform.position.y;
+
+        Vector3 baseLeft = new(
+            centerX - gizmoWidth * 0.5f,
+            cameraY + baseY,
+            0f
+        );
+
+        Vector3 baseRight = new(
+            centerX + gizmoWidth * 0.5f,
+            cameraY + baseY,
+            0f
+        );
+
+        Vector3 horizonLeft = new(
+            centerX - gizmoWidth * 0.5f,
+            cameraY + horizonY,
+            0f
+        );
+
+        Vector3 horizonRight = new(
+            centerX + gizmoWidth * 0.5f,
+            cameraY + horizonY,
+            0f
+        );
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(baseLeft, baseRight);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(horizonLeft, horizonRight);
     }
 }
