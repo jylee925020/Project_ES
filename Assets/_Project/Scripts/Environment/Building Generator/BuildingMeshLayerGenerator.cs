@@ -140,8 +140,9 @@ public class BuildingMeshLayerGenerator : MonoBehaviour
         horizontalRange = range;
     }
 
-    public void SetSortingOrder(int order)
+    public void SetSorting(string sortingLayerName, int order)
     {
+        meshRenderer.sortingLayerName = sortingLayerName;
         meshRenderer.sortingOrder = order;
     }
 

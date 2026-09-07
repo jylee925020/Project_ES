@@ -105,7 +105,7 @@ public class BuildingMeshBackgroundGenerator : MonoBehaviour
                 horizontalRange
             );
 
-            layer.SetSortingOrder(-i);
+            layer.SetSorting("Background", -i);
 
             Transform layerTransform =
                 layer.transform;
